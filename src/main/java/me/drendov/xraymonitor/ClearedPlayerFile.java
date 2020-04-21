@@ -74,7 +74,7 @@ public class ClearedPlayerFile {
 
     static {
         clearedPlayers = new File("plugins/xraymonitor/" + File.separator + "ClearedPlayers.yml");
-        cpinfo = YamlConfiguration.loadConfiguration((File) clearedPlayers);
+        cpinfo = YamlConfiguration.loadConfiguration(clearedPlayers);
         cpList = new ArrayList<String>();
     }
 }

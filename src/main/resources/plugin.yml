@@ -1,6 +1,7 @@
 name: XRayMonitor
 version: 0.1.0
 description: This plugin helps you to protect your server from x-ray cheaters.
+website: https://github.com/DmitryRendov/XRayMonitor
 author: DmitryRendov
 main: me.drendov.xraymonitor.XRayMonitor
 softdepend: [LogBlock]

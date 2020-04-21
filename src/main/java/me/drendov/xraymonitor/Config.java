@@ -47,7 +47,7 @@ public class Config {
         this.config.addDefault("spawners_warn", 1.6);
         this.config.addDefault("spawners_confirmed", 2.2);
         this.config.addDefault("logOreBreaks.diamond", true);
-        this.config.addDefault("logOreBreaks.emerald", false);
+        this.config.addDefault("logOreBreaks.emerald", true);
         this.config.addDefault("logOreBreaks.iron", false);
         this.config.addDefault("logOreBreaks.gold", false);
         this.config.addDefault("logOreBreaks.redstone", false);

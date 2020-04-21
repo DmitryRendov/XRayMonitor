@@ -7,19 +7,15 @@ public class CustomRunnable
     CommandSender sender;
     String world;
     String oreName;
-    String bantype;
     float maxrate;
-    boolean banned;
     int hours;
 
-    CustomRunnable(CommandSender sender, String world, String oreName, String bantype, float maxrate, boolean banned, int hours) {
+    CustomRunnable(CommandSender sender, String world, String oreName, float maxrate, int hours) {
         this.sender = sender;
         this.hours = hours;
         this.world = world;
         this.oreName = oreName;
-        this.bantype = bantype;
         this.maxrate = maxrate;
-        this.banned = banned;
     }
 
     @Override

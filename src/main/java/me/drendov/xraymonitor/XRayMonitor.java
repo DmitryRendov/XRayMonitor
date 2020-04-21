@@ -1,38 +1,69 @@
 package me.drendov.xraymonitor;
 
+import java.util.Objects;
+import java.util.logging.Logger;
 import de.diddiz.LogBlock.LogBlock;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class XRayMonitor extends JavaPlugin {
-    public final Config config = new Config(this);
     private static XRayMonitor instance;
-    public Boolean banned = false;
+
+    //for logging to the console
+    private static Logger logger;
+
+    public final Config config = new Config(this);
+
     private String version;
     public final String msgBorder = (Object) ChatColor.DARK_GREEN + "-" + (Object) ChatColor.GREEN + "-" + (Object) ChatColor.DARK_GREEN + "-" + (Object) ChatColor.GREEN + "-" + (Object) ChatColor.DARK_GREEN + "-" + (Object) ChatColor.GREEN + "-" + (Object) ChatColor.DARK_GREEN + "-" + (Object) ChatColor.GREEN + "-" + (Object) ChatColor.DARK_GREEN + "-" + (Object) ChatColor.GREEN + "-" + (Object) ChatColor.DARK_GREEN + "-" + (Object) ChatColor.GREEN + "-" + (Object) ChatColor.DARK_GREEN + "-" + (Object) ChatColor.GREEN + "-" + (Object) ChatColor.DARK_GREEN + "-" + (Object) ChatColor.GREEN + "-" + (Object) ChatColor.DARK_GREEN + "-" + (Object) ChatColor.GREEN + "-" + (Object) ChatColor.DARK_GREEN + "-" + (Object) ChatColor.GREEN + "-" + (Object) ChatColor.DARK_GREEN + "-" + (Object) ChatColor.GREEN + "-" + (Object) ChatColor.DARK_GREEN + "-" + (Object) ChatColor.GREEN + "-" + (Object) ChatColor.DARK_GREEN + "-" + (Object) ChatColor.GREEN + "-" + (Object) ChatColor.DARK_GREEN + "-" + (Object) ChatColor.GREEN + "-" + (Object) ChatColor.DARK_GREEN + "-" + (Object) ChatColor.GREEN + "-" + (Object) ChatColor.DARK_GREEN + "-";
 
     @Override
     public void onEnable() {
         instance = this;
+        logger = instance.getLogger();
+
+
         this.config.load();
         this.detectLogger();
+
+        // load cleared players
         ClearedPlayerFile.loadClearedPlayers();
-        this.getServer().getPluginManager().registerEvents((Listener) new Listeners(), (Plugin) this);
-        this.getCommand("xcheck").setExecutor((CommandExecutor) new Cmd());
+
+        // register for events
+        PluginManager pluginManager = this.getServer().getPluginManager();
+
+        // player events
+        pluginManager.registerEvents((Listener) new Listeners(), (Plugin) this);
+        Objects.requireNonNull(this.getCommand("xcheck")).setExecutor(new Cmd());
+
+//        //cache offline players
+//        OfflinePlayer [] offlinePlayers = this.getServer().getOfflinePlayers();
+//        CacheOfflinePlayerNamesThread namesThread = new CacheOfflinePlayerNamesThread(offlinePlayers, this.playerNameToIDMap);
+//        namesThread.setPriority(Thread.MIN_PRIORITY);
+//        namesThread.start();
+//        //load ignore lists for any already-online players
+//        @SuppressWarnings("unchecked")
+//        Collection<Player> players = (Collection<Player>)GriefPrevention.instance.getServer().getOnlinePlayers();
+//        for(Player player : players)
+//        {
+//            new IgnoreLoaderThread(player.getUniqueId(), this.dataStore.getPlayerData(player.getUniqueId()).ignoredPlayers).start();
+//        }
 
         PluginDescriptionFile pdfFile = this.getDescription();
         this.version = pdfFile.getVersion();
-        this.getLogger().info("XRayMonitor v" + this.version + " enabled.");
+        logger.info("XRayMonitor v" + this.version + " enabled.");
     }
 
     @Override
     public void onDisable() {
-        this.getLogger().info("XRayMonitor disabled");
+        logger.info("XRayMonitor disabled");
     }
 
     public static XRayMonitor getInstance() {
@@ -42,13 +73,15 @@ public class XRayMonitor extends JavaPlugin {
     private void detectLogger() {
         Plugin p = this.getServer().getPluginManager().getPlugin("LogBlock");
         if (!(p instanceof LogBlock)) {
-            this.getLogger().severe("LogBlock has not been detected. Disabling XRayMonitor.");
-            p = this.getServer().getPluginManager().getPlugin("XRayMonitor");
-            this.getServer().getPluginManager().disablePlugin(p);
+            logger.severe("LogBlock has not been detected. Disabling XRayMonitor.");
+            this.getServer().getPluginManager().disablePlugin(this);
         }
         this.config.setLogger("LogBlock");
     }
 
+    public boolean checkWorld(String world) {
+        return this.getServer().getWorld(world) != null;
+    }
     void showInfo(CommandSender sender) {
         sender.sendMessage(ChatColor.WHITE + "----- " + ChatColor.GREEN + "XRayMonitor v" + this.version + ChatColor.WHITE + " -----");
         sender.sendMessage(ChatColor.YELLOW + "/xcheck <player> " + ChatColor.WHITE + "- Calculate a player's x-ray stats");

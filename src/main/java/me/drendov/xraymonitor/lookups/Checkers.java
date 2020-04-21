@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -13,13 +12,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class Checkers
 {
-    private static XRayMonitor plugin;
-
-    public Checkers()
-    {
-        plugin = XRayMonitor.getInstance();
-    }
-
+    private static XRayMonitor plugin = XRayMonitor.getInstance();
     private static LogBlockLookup lb = new LogBlockLookup();
 
     public void checkGlobal(final String name, final CommandSender sender, final String world, final int hours)
@@ -29,11 +22,8 @@ public class Checkers
             @Override
             public void run()
             {
-                int hrs = hours;
-                if (hours == -1) {
-                    hrs = -1;
-                }
-                if (Checkers.plugin.getServer().getWorld(world) == null) {
+
+                if ( ! Checkers.plugin.checkWorld(world)) {
                     sender.sendMessage("Please check config.yml - your configured world seems not to exist?");
                 }
                 try
@@ -52,21 +42,21 @@ public class Checkers
                     int mossy_count = 0;
                     int emerald_count = 0;
                     int spawner_count = 0;
-                    if (Checkers.plugin.getConfig().getString("logging_plugin").equalsIgnoreCase("logblock"))
+                    if (plugin.getConfig().getString("logging_plugin").equalsIgnoreCase("logblock"))
                     {
-                        count_stone = Checkers.lb.oreLookup(name, "stone", world, hrs);
-                        diamond_count = Checkers.lb.oreLookup(name, "diamond_ore", world, hrs);
-                        gold_count = Checkers.lb.oreLookup(name, "gold_ore", world, hrs);
-                        lapis_count = Checkers.lb.oreLookup(name, "lapis_ore", world, hrs);
-                        iron_count = Checkers.lb.oreLookup(name, "iron_ore", world, hrs);
-                        redstone_count = Checkers.lb.oreLookup(name, "redstone_ore", world, hrs);
-                        coal_count = Checkers.lb.oreLookup(name, "coal_ore", world, hrs);
-                        mossy_count = Checkers.lb.oreLookup(name, "mossy_cobblestone", world, hrs);
-                        emerald_count = Checkers.lb.oreLookup(name,"emerald_ore", world, hrs);
-                        spawner_count = Checkers.lb.oreLookup(name, "spawner", world, hrs);
+                        count_stone = Checkers.lb.oreLookup(name, "stone", world, hours);
+                        diamond_count = Checkers.lb.oreLookup(name, "diamond_ore", world, hours);
+                        gold_count = Checkers.lb.oreLookup(name, "gold_ore", world, hours);
+                        lapis_count = Checkers.lb.oreLookup(name, "lapis_ore", world, hours);
+                        iron_count = Checkers.lb.oreLookup(name, "iron_ore", world, hours);
+                        redstone_count = Checkers.lb.oreLookup(name, "redstone_ore", world, hours);
+                        coal_count = Checkers.lb.oreLookup(name, "coal_ore", world, hours);
+                        mossy_count = Checkers.lb.oreLookup(name, "mossy_cobblestone", world, hours);
+                        emerald_count = Checkers.lb.oreLookup(name,"emerald_ore", world, hours);
+                        spawner_count = Checkers.lb.oreLookup(name, "spawner", world, hours);
                     }
 
-                    sender.sendMessage(ChatColor.GREEN + "xraymonitor: " + ChatColor.GOLD + name);
+                    //sender.sendMessage(ChatColor.GREEN + "xraymonitor: " + ChatColor.GOLD + name);
                     sender.sendMessage(Checkers.plugin.msgBorder);
                     sender.sendMessage("Stones: " + String.valueOf(count_stone));
 
@@ -280,10 +270,6 @@ public class Checkers
             @Override
             public void run()
             {
-                int hrs = hours;
-                if (hours == -1) {
-                    hrs = -1;
-                }
                 try
                 {
                     sender.sendMessage(ChatColor.GREEN + "[XRayMonitor] Calculating ore ratios for " + ChatColor.GOLD + name + ".");
@@ -292,14 +278,14 @@ public class Checkers
                     int count_xyz = 0;
                     if (Checkers.plugin.getConfig().getString("logging_plugin").equalsIgnoreCase("logblock"))
                     {
-                        count_stone = Checkers.lb.oreLookup(name, "stone", world, hrs);
-                        count_xyz = Checkers.lb.oreLookup(name, oreName, world, hrs);
+                        count_stone = Checkers.lb.oreLookup(name, "stone", world, hours);
+                        count_xyz = Checkers.lb.oreLookup(name, oreName, world, hours);
                     }
 
                     String mat_1_name = Material.getMaterial(oreName).toString();
 
                     sender.sendMessage(Checkers.plugin.msgBorder);
-                    sender.sendMessage(ChatColor.GREEN + "xraymonitor: " + ChatColor.GOLD + name);
+                    sender.sendMessage(ChatColor.GREEN + "[xraymonitor: " + ChatColor.GOLD + name);
                     sender.sendMessage(Checkers.plugin.msgBorder);
                     sender.sendMessage("Stones: " + String.valueOf(count_stone));
 
@@ -323,11 +309,8 @@ public class Checkers
         }.runTaskAsynchronously(plugin);
     }
 
-    public void listAllXRayers(CommandSender sender, String world, String oreName, String bantype, float maxrate, boolean banned, int hours)
+    public void listAllXRayers(CommandSender sender, String world, String oreName, float maxrate, int hours)
     {
-        if (hours == -1) {
-            hours = -1;
-        }
         List<String[]> playerOreStone = new ArrayList();
         if (plugin.getConfig().getString("logging_plugin").equalsIgnoreCase("logblock"))
         {
@@ -335,33 +318,19 @@ public class Checkers
             playerOreStone = lb.playerLookup(sender, oreName, world);
         }
         sender.sendMessage(plugin.msgBorder);
-        sender.sendMessage(ChatColor.GREEN + "xraymonitor: All players on " + Material.getMaterial(oreName).toString());
+        sender.sendMessage(ChatColor.GREEN + "[XRayMonitor] All players on " + Material.getMaterial(oreName).toString());
         sender.sendMessage(plugin.msgBorder);
         if (playerOreStone == null) {
             sender.sendMessage(ChatColor.RED + "playerOreStone is null");
         }
         ArrayList<String> preventRepeat = new ArrayList();
-        for (Iterator<String[]> itr = playerOreStone.iterator(); itr.hasNext();)
-        {
-            String[] row = (String[])itr.next();
-            if (Integer.valueOf(row[2]).intValue() >= 100)
-            {
-                float d = (float)(Integer.valueOf(row[1]).intValue() * 100.0D / Integer.valueOf(row[2]).intValue());
+        for (String[] row : playerOreStone) {
+            if (Integer.valueOf(row[2]).intValue() >= 100) {
+                float d = (float) (Integer.valueOf(row[1]).intValue() * 100.0D / Integer.valueOf(row[2]).intValue());
                 if (d > maxrate) {
                     if (!preventRepeat.contains(row[0])) {
-                        if (!banned)
-                        {
-                            if (!Bukkit.getOfflinePlayer(row[0]).isBanned())
-                            {
-                                sender.sendMessage(row[0] + " " + d + "%");
-                                preventRepeat.add(row[0]);
-                            }
-                        }
-                        else
-                        {
-                            sender.sendMessage(row[0] + " " + d + "%");
-                            preventRepeat.add(row[0]);
-                        }
+                        sender.sendMessage(row[0] + " " + d + "%");
+                        preventRepeat.add(row[0]);
                     }
                 }
             }
