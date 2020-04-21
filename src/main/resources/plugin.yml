@@ -1,0 +1,26 @@
+name: XRayMonitor
+version: 0.1.0
+description: This plugin helps you to protect your server from x-ray cheaters.
+author: DmitryRendov
+main: me.drendov.xraymonitor.XRayMonitor
+softdepend: [LogBlock]
+api-version: 1.13
+
+commands:
+  xcheck:
+    description: Check for a given player, enter /xcheck reload to reload the config
+    usage: |
+      /xcheck <player>
+      /xcheck <player> world:<world_name>
+      /xcheck all
+
+permissions: 
+  xcheck.check:
+    description: Allows the XRayMonitor to check players
+    default: false
+  xcheck.receive:
+    description: These members will receive messages when a potential cheater joins the game, and when ores are broken
+    default: false
+  xcheck.bypasscheck:
+    description: These members will be skipped on login check
+    default: false
