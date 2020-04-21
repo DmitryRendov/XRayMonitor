@@ -15,7 +15,8 @@ public class Listeners
         implements Listener {
     private XRayMonitor plugin;
 
-    public Listeners() {
+    Listeners() {
+
         this.plugin = XRayMonitor.getInstance();
     }
 
@@ -141,14 +142,14 @@ public class Listeners
                         if ((dia != "") || (gld != "") || (lap != "") || (emr != "") || (irn != "") || (coa != "") || (rds != "") || (msy != "") || (spn != "")) {
                             for (Player staff : Listeners.this.plugin.getServer().getOnlinePlayers()) {
                                 if ((staff.hasPermission("xcheck.receive")) || (staff.isOp())) {
-                                    staff.sendMessage(ChatColor.RED + "[xraymonitor] " + Listeners.this.plugin.getConfig().getString("checkOnPlayerJoin.warningMessage").replace("%player%", playerName).replace("%ores%", new StringBuilder(String.valueOf(dia)).append(gld).append(lap).append(emr).append(irn).append(rds).append(coa).append(msy).append(spn).toString()));
+                                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + Listeners.this.plugin.getConfig().getString("checkOnPlayerJoin.warningMessage").replace("%player%", playerName).replace("%ores%", new StringBuilder(String.valueOf(dia)).append(gld).append(lap).append(emr).append(irn).append(rds).append(coa).append(msy).append(spn).toString()));
                                     Listeners.this.plugin.getLogger().info("Player " + Listeners.this.plugin.getConfig().getString("checkOnPlayerJoin.warningMessage").replace("%player%", playerName).replace("%ores%", new StringBuilder(String.valueOf(dia)).append(gld).append(lap).append(emr).append(irn).append(rds).append(coa).append(msy).append(spn).toString()));
                                 }
                             }
                             if (!Listeners.this.plugin.config.getCmd("commandOnXrayerJoin").equals("none")) {
                                 String cmd = Listeners.this.plugin.config.getCmd("commandOnXrayerJoin").replaceAll("%player%", playerName);
                                 cmd = cmd.replaceAll("%ores%", dia + gld + lap + emr + irn + rds + coa + msy + spn);
-                                //cmd = cmd.replaceAll("%xlevel%", (String)level);
+                                cmd = cmd.replaceAll("%xlevel%", String.valueOf(level) );
                                 Listeners.this.plugin.getServer().dispatchCommand(Listeners.this.plugin.getServer().getConsoleSender(), cmd);
                             }
                         }
@@ -172,63 +173,63 @@ public class Listeners
         if ((block == Material.IRON_ORE) && (this.plugin.getConfig().getBoolean("logOreBreaks.iron"))) {
             for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
                 if (staff.hasPermission("xcheck.receive")) {
-                    staff.sendMessage(ChatColor.RED + "[xraymonitor] " + ChatColor.AQUA + player + " has just mined an iron ore.");
+                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined an iron ore.");
                 }
             }
         }
         if ((block == Material.COAL_ORE) && (this.plugin.getConfig().getBoolean("logOreBreaks.coal"))) {
             for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
                 if (staff.hasPermission("xcheck.receive")) {
-                    staff.sendMessage(ChatColor.RED + "[xraymonitor] " + ChatColor.AQUA + player + " has just mined a coal ore.");
+                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined a coal ore.");
                 }
             }
         }
         if ((block == Material.REDSTONE_ORE) && (this.plugin.getConfig().getBoolean("logOreBreaks.redstone"))) {
             for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
                 if (staff.hasPermission("xcheck.receive")) {
-                    staff.sendMessage(ChatColor.RED + "[xraymonitor] " + ChatColor.AQUA + player + " has just mined a redstone ore.");
+                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined a redstone ore.");
                 }
             }
         }
         if ((block == Material.GOLD_ORE) && (this.plugin.getConfig().getBoolean("logOreBreaks.gold"))) {
             for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
                 if (staff.hasPermission("xcheck.receive")) {
-                    staff.sendMessage(ChatColor.RED + "[xraymonitor] " + ChatColor.AQUA + player + " has just mined a gold ore.");
+                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined a gold ore.");
                 }
             }
         }
         if ((block == Material.LAPIS_ORE) && (this.plugin.getConfig().getBoolean("logOreBreaks.lapis"))) {
             for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
                 if (staff.hasPermission("xcheck.receive")) {
-                    staff.sendMessage(ChatColor.RED + "[xraymonitor] " + ChatColor.AQUA + player + " has just mined a lapis ore.");
+                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined a lapis ore.");
                 }
             }
         }
         if ((block == Material.EMERALD_ORE) && (this.plugin.getConfig().getBoolean("logOreBreaks.emerald"))) {
             for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
                 if (staff.hasPermission("xcheck.receive")) {
-                    staff.sendMessage(ChatColor.RED + "[xraymonitor] " + ChatColor.AQUA + player + " has just mined a emerald ore.");
+                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined a emerald ore.");
                 }
             }
         }
         if ((block == Material.DIAMOND_ORE) && (this.plugin.getConfig().getBoolean("logOreBreaks.diamond"))) {
             for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
                 if (staff.hasPermission("xcheck.receive")) {
-                    staff.sendMessage(ChatColor.RED + "[xraymonitor] " + ChatColor.AQUA + player + " has just mined a diamond ore.");
+                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined a diamond ore.");
                 }
             }
         }
         if ((block == Material.MOSSY_COBBLESTONE) && (this.plugin.getConfig().getBoolean("logOreBreaks.mossy"))) {
             for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
                 if (staff.hasPermission("xcheck.receive")) {
-                    staff.sendMessage(ChatColor.RED + "[xraymonitor] " + ChatColor.AQUA + player + " has just mined a mossy cobblestone block.");
+                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined a mossy cobblestone block.");
                 }
             }
         }
         if ((block == Material.SPAWNER) && (this.plugin.getConfig().getBoolean("logOreBreaks.spawners"))) {
             for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
                 if (staff.hasPermission("xcheck.receive")) {
-                    staff.sendMessage(ChatColor.RED + "[xraymonitor] " + ChatColor.AQUA + player + " has just mined a monster spawner.");
+                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined a monster spawner.");
                 }
             }
         }
