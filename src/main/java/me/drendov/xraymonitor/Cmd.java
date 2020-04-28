@@ -80,7 +80,7 @@ public class Cmd
                 if (hm.containsKey("world")) {
                     world = hm.get("world");
                     logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " world=" + world);
-                    if ( ! plugin.checkWorld(world) ) {
+                    if (!plugin.checkWorld(world)) {
                         XRayMonitor.sendMessage(player, TextMode.Err, Messages.WorldNotFound);
                         return true;
                     }
@@ -121,7 +121,7 @@ public class Cmd
                             logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " hours for cleared playerName=" + hours);
                         }
                         world = Config.defaultWorld;
-                        if ( world != null && ! plugin.checkWorld(world) ) {
+                        if (world != null && !plugin.checkWorld(world)) {
                             XRayMonitor.sendMessage(player, TextMode.Err, Messages.DefaultWorldNotFound);
                             return true;
                         }
@@ -135,7 +135,7 @@ public class Cmd
                 }
                 if (world.length() > 0 && oreName.isEmpty()) {
                     try {
-                        if ( ! plugin.checkWorld(world) ) {
+                        if (!plugin.checkWorld(world)) {
                             XRayMonitor.sendMessage(player, TextMode.Err, Messages.WorldNotFound);
                             return true;
                         }
@@ -171,7 +171,7 @@ public class Cmd
                 }
                 if (world.length() == 0 && !oreName.isEmpty()) {
                     world = Config.defaultWorld;
-                    if ( world != null && ! plugin.checkWorld(world) ) {
+                    if (world != null && !plugin.checkWorld(world)) {
                         XRayMonitor.sendMessage(player, TextMode.Err, Messages.DefaultWorldNotFound);
                         return true;
                     }
@@ -185,7 +185,7 @@ public class Cmd
                             public void run() {
                                 Cmd.this.checker.listAllXRayers(s, w, on, mr, h);
                             }
-                        }.runTaskAsynchronously(this.plugin);
+                        }.runTaskAsynchronously(plugin);
                         return true;
                     }
                     if (ClearedPlayerFile.wasPlayerCleared(playerName)) {
@@ -195,7 +195,7 @@ public class Cmd
                     return true;
                 }
             } else {
-                XRayMonitor.sendMessage(player, TextMode.Err, Messages.NoPermissionForCommand );
+                XRayMonitor.sendMessage(player, TextMode.Err, Messages.NoPermissionForCommand);
                 return true;
             }
         }

@@ -166,9 +166,11 @@ public class XRayMonitor extends JavaPlugin {
         this.addDefault(defaults, Messages.NoPermissionForCommand, "You don't have permission to do that.", null);
         this.addDefault(defaults, Messages.WorldNotFound, "World not found.", null);
         this.addDefault(defaults, Messages.DefaultWorldNotFound, "Default world does not exist. Please check your configuration file.", null);
-        this.addDefault(defaults, Messages.CalculationOre, "Calculating ore ratios for {0}.", "0: a player");
+        this.addDefault(defaults, Messages.CalcPlayerOre, "Calculating ore ratios for {0}.", "0: a player");
+        this.addDefault(defaults, Messages.AllPlayersOnOre, "All players on {0}.", "0: ore name");
+        this.addDefault(defaults, Messages.CalcAllPlayersOreRate, "Searching for players with a {0} rate higher than {1}.", "0: ore name; 1: max rate in percent");
         this.addDefault(defaults, Messages.PleaseBePatient, "Please be patient, this may take a minute.", null);
-        this.addDefault(defaults, Messages.Stones, "Stones: {0}", "0: number of stone blocks.");
+        this.addDefault(defaults, Messages.Stones, "Stones: {0}", "0: number of stone-like blocks (incl. granite/andesite/diorite).");
 
         this.addDefault(defaults, Messages.Diamond, "Diamond: {0}", "0: number of diamond ore blocks.");
         this.addDefault(defaults, Messages.Emerald, "Emerald: {0}", "0: number of emerald ore blocks.");
@@ -180,13 +182,13 @@ public class XRayMonitor extends JavaPlugin {
         this.addDefault(defaults, Messages.Mossy, "Mossy: {0}", "0: number of mossy blocks.");
         this.addDefault(defaults, Messages.Spawners, "Spawners: {0}", "0: number of spawners.");
 
+        this.addDefault(defaults, Messages.VeryLowChanceXRay, "xLevel: {0}. (x-ray use is very unlikely)", "0: level of x-ray usage");
+        this.addDefault(defaults, Messages.LowChanceXRay, "xLevel: {0}. (x-ray use is unlikely).", "0: level of x-ray usage");
+        this.addDefault(defaults, Messages.MediumChanceXRay, "xLevel: {0}. (medium chance of x-ray).", "0: level of x-ray usage");
+        this.addDefault(defaults, Messages.HighChanceXRay, "xLevel: {0}. (high chance of x-ray).", "0: level of x-ray usage");
+        this.addDefault(defaults, Messages.VeryHighChanceXRay, "xLevel: {0}. (very high chance of x-ray).", "0: level of x-ray usage");
+
         //initialize defaults
-        this.addDefault(defaults, Messages.NoCreativeUnClaim, "You can't unclaim this land.  You can only make this claim larger or create additional claims.", null);
-        this.addDefault(defaults, Messages.RestoreNatureActivate, "Ready to restore some nature!  Right click to restore nature, and use /BasicClaims to stop.", null);
-        this.addDefault(defaults, Messages.RestoreNatureAggressiveActivate, "Aggressive mode activated.  Do NOT use this underneath anything you want to keep!  Right click to aggressively restore nature, and use /BasicClaims to stop.", null);
-        this.addDefault(defaults, Messages.FillModeActive, "Fill mode activated with radius {0}.  Right click an area to fill.", "0: fill radius");
-        this.addDefault(defaults, Messages.TransferClaimPermission, "That command requires the administrative claims permission.", null);
-        this.addDefault(defaults, Messages.TransferClaimMissing, "There's no claim here.  Stand in the administrative claim you want to transfer.", null);
         this.addDefault(defaults, Messages.TransferClaimAdminOnly, "Only administrative claims may be transferred to a player.", null);
         this.addDefault(defaults, Messages.PlayerNotFound2, "No player by that name has logged in recently.", null);
         this.addDefault(defaults, Messages.TransferTopLevel, "Only top level claims (not subdivisions) may be transferred.  Stand outside of the subdivision and try again.", null);
