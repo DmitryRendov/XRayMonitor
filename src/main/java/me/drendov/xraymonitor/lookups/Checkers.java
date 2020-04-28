@@ -1,5 +1,7 @@
 package me.drendov.xraymonitor.lookups;
 
+import me.drendov.xraymonitor.Messages;
+import me.drendov.xraymonitor.TextMode;
 import me.drendov.xraymonitor.XRayMonitor;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -10,6 +12,7 @@ import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Checkers
@@ -29,13 +32,19 @@ public class Checkers
             public void run()
             {
 
-                if ( ! Checkers.plugin.checkWorld(world)) {
-                    sender.sendMessage("Please check config.yml - your configured world seems not to exist?");
+                Player player = null;
+                if (sender instanceof Player) {
+                    player = (Player) sender;
                 }
+
+                if ( ! Checkers.plugin.checkWorld(world)) {
+                    XRayMonitor.sendMessage(player, TextMode.Err, Messages.DefaultWorldNotFound);
+                }
+
                 try
                 {
-                    sender.sendMessage(ChatColor.GREEN + "[XRayMonitor] Calculating ore ratios for " + ChatColor.GOLD + name + ".");
-                    sender.sendMessage(ChatColor.GREEN + "[XRayMonitor] Please be patient, this may take a minute.");
+                    XRayMonitor.sendMessage(player, TextMode.Info, Messages.CalculationOre, ChatColor.GOLD + name);
+                    XRayMonitor.sendMessage(player, TextMode.Info, Messages.PleaseBePatient);
                     int level = 0;
                     int count_stone = 0;
 
@@ -62,9 +71,8 @@ public class Checkers
                         spawner_count = Checkers.lb.oreLookup(name, "spawner", world, hours);
                     }
 
-                    //sender.sendMessage(ChatColor.GREEN + "xraymonitor: " + ChatColor.GOLD + name);
                     sender.sendMessage(Checkers.plugin.msgBorder);
-                    sender.sendMessage("Stones: " + String.valueOf(count_stone));
+                    XRayMonitor.sendMessage(player, TextMode.Info, Messages.Stones, String.valueOf(count_stone));
 
                     String s = "";
                     ChatColor ccolor = ChatColor.GREEN;

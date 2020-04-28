@@ -6,11 +6,10 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Cmd
@@ -20,13 +19,19 @@ public class Cmd
     private static Logger logger = plugin.getLogger();
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+
+        Player player = null;
+        if (sender instanceof Player) {
+            player = (Player) sender;
+        }
+
         // xcheck
         if (cmd.getName().equalsIgnoreCase("xcheck")) {
             if (sender.hasPermission("xcheck.check") || sender.isOp()) {
-                String player = "";
+                String playerName = "";
                 if (args.length > 0) {
                     if (!args[0].contains(":")) {
-                        player = args[0];
+                        playerName = args[0];
                     }
                 } else {
                     this.plugin.showInfo(sender);
@@ -76,7 +81,7 @@ public class Cmd
                     world = hm.get("world");
                     logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " world=" + world);
                     if ( ! plugin.checkWorld(world) ) {
-                        sender.sendMessage(ChatColor.RED + "[XRayMonitor]" + ChatColor.WHITE + " This world does not exist. Please check your world-parameter.");
+                        XRayMonitor.sendMessage(player, TextMode.Err, Messages.WorldNotFound);
                         return true;
                     }
                 }
@@ -86,7 +91,7 @@ public class Cmd
                 }
                 if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
                     plugin.config.load();
-                    sender.sendMessage( ChatColor.RED + "[XRayMonitor]" +  ChatColor.WHITE + " Config reloaded.");
+                    XRayMonitor.sendMessage(player, TextMode.Success, Messages.Reloaded);
                     return true;
                 }
                 if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
@@ -102,27 +107,27 @@ public class Cmd
                         }
                         return true;
                     }
-                    sender.sendMessage( ChatColor.RED + "[XRayMonitor]" +  ChatColor.WHITE + " You do not have permission for this command.");
+                    XRayMonitor.sendMessage(player, TextMode.Err, Messages.NoPermissionForCommand);
                     return true;
                 }
-                if (player.length() == 0) {
+                if (playerName.length() == 0) {
                     this.plugin.showInfo(sender);
                     return true;
                 }
                 if (world.length() == 0 && oreName.isEmpty()) {
                     try {
-                        if (ClearedPlayerFile.wasPlayerCleared(player)) {
-                            hours = ClearedPlayerFile.getHoursFromClear(player);
-                            logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " hours for cleared player=" + hours);
+                        if (ClearedPlayerFile.wasPlayerCleared(playerName)) {
+                            hours = ClearedPlayerFile.getHoursFromClear(playerName);
+                            logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " hours for cleared playerName=" + hours);
                         }
                         world = Config.defaultWorld;
                         if ( world != null && ! plugin.checkWorld(world) ) {
-                            sender.sendMessage(ChatColor.RED + "[XRayMonitor]" + ChatColor.WHITE + " Default world does not exist. Please check your configuration file.");
+                            XRayMonitor.sendMessage(player, TextMode.Err, Messages.DefaultWorldNotFound);
                             return true;
                         }
 
-                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run checkGlobal with: player=" + player + " sender=" + sender + " world=" + world + " hours=" + hours);
-                        this.checker.checkGlobal(player, sender, world, hours);
+                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run checkGlobal with: playerName=" + playerName + " sender=" + sender + " world=" + world + " hours=" + hours);
+                        this.checker.checkGlobal(playerName, sender, world, hours);
                         return true;
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -131,21 +136,21 @@ public class Cmd
                 if (world.length() > 0 && oreName.isEmpty()) {
                     try {
                         if ( ! plugin.checkWorld(world) ) {
-                            sender.sendMessage(ChatColor.RED + "[XRayMonitor]" + ChatColor.WHITE + " This world does not exist. Please check your world-parameter.");
+                            XRayMonitor.sendMessage(player, TextMode.Err, Messages.WorldNotFound);
                             return true;
                         }
-                        if (ClearedPlayerFile.wasPlayerCleared(player)) {
-                            hours = ClearedPlayerFile.getHoursFromClear(player);
+                        if (ClearedPlayerFile.wasPlayerCleared(playerName)) {
+                            hours = ClearedPlayerFile.getHoursFromClear(playerName);
                         }
-                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run checkGlobal with: player=" + player + " sender=" + sender + " world=" + world + " hours=" + hours);
-                        this.checker.checkGlobal(player, sender, world, hours);
+                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run checkGlobal with: playerName=" + playerName + " sender=" + sender + " world=" + world + " hours=" + hours);
+                        this.checker.checkGlobal(playerName, sender, world, hours);
                         return true;
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
                 if (world.length() > 0 && !oreName.isEmpty()) {
-                    if (player.equalsIgnoreCase("all") && maxrate > 0.0f) {
+                    if (playerName.equalsIgnoreCase("all") && maxrate > 0.0f) {
                         logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run listAllXRayers with: sender=" + sender + " world=" + world + " oreName=" + oreName + " maxrate=" + maxrate + " hours=" + hours);
                         new Thread(new CustomRunnable(sender, world, oreName, maxrate, hours) {
 
@@ -157,20 +162,20 @@ public class Cmd
                         }).start();
                         return true;
                     }
-                    if (ClearedPlayerFile.wasPlayerCleared(player)) {
-                        hours = ClearedPlayerFile.getHoursFromClear(player);
+                    if (ClearedPlayerFile.wasPlayerCleared(playerName)) {
+                        hours = ClearedPlayerFile.getHoursFromClear(playerName);
                     }
-                    logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run checkSingle with: player=" + player + " sender=" + sender + " oreName=" + oreName + " world=" + world + " hours=" + hours);
-                    this.checker.checkSingle(player, sender, oreName, world, hours);
+                    logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run checkSingle with: playerName=" + playerName + " sender=" + sender + " oreName=" + oreName + " world=" + world + " hours=" + hours);
+                    this.checker.checkSingle(playerName, sender, oreName, world, hours);
                     return true;
                 }
                 if (world.length() == 0 && !oreName.isEmpty()) {
                     world = Config.defaultWorld;
                     if ( world != null && ! plugin.checkWorld(world) ) {
-                        sender.sendMessage(ChatColor.RED + "[XRayMonitor]" + ChatColor.WHITE + " Default world does not exist. Please check your configuration file.");
+                        XRayMonitor.sendMessage(player, TextMode.Err, Messages.DefaultWorldNotFound);
                         return true;
                     }
-                    if (player.equalsIgnoreCase("all") && maxrate > 0.0f) {
+                    if (playerName.equalsIgnoreCase("all") && maxrate > 0.0f) {
                         final CommandSender s = sender;
                         final String w = world;
                         final String on = oreName;
@@ -183,14 +188,14 @@ public class Cmd
                         }.runTaskAsynchronously(this.plugin);
                         return true;
                     }
-                    if (ClearedPlayerFile.wasPlayerCleared(player)) {
-                        hours = ClearedPlayerFile.getHoursFromClear(player);
+                    if (ClearedPlayerFile.wasPlayerCleared(playerName)) {
+                        hours = ClearedPlayerFile.getHoursFromClear(playerName);
                     }
-                    this.checker.checkSingle(player, sender, oreName, world, hours);
+                    this.checker.checkSingle(playerName, sender, oreName, world, hours);
                     return true;
                 }
             } else {
-                sender.sendMessage( ChatColor.RED + "[XRayMonitor]" +  ChatColor.WHITE + " You do not have permission for this command.");
+                XRayMonitor.sendMessage(player, TextMode.Err, Messages.NoPermissionForCommand );
                 return true;
             }
         }

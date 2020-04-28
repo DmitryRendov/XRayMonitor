@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.logging.Logger;
+
 import de.diddiz.LogBlock.LogBlock;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -96,6 +97,7 @@ public class XRayMonitor extends JavaPlugin {
     public boolean checkWorld(String world) {
         return this.getServer().getWorld(world) != null;
     }
+
     void showInfo(CommandSender sender) {
         sender.sendMessage(ChatColor.WHITE + "----- " + ChatColor.GREEN + "XRayMonitor v" + this.version + ChatColor.WHITE + " -----");
         sender.sendMessage(ChatColor.YELLOW + "/xcheck <player> " + ChatColor.WHITE + "- Calculate a player's x-ray stats");
@@ -122,60 +124,64 @@ public class XRayMonitor extends JavaPlugin {
     }
 
     //sends a color-coded message to a player
-    public static void sendMessage(Player player, ChatColor color, Messages messageID, String... args)
-    {
+    public static void sendMessage(Player player, ChatColor color, Messages messageID, String... args) {
         sendMessage(player, color, messageID, 0, args);
     }
 
     //sends a color-coded message to a player
-    public static void sendMessage(Player player, ChatColor color, Messages messageID, long delayInTicks, String... args)
-    {
+    public static void sendMessage(Player player, ChatColor color, Messages messageID, long delayInTicks, String... args) {
         String message = XRayMonitor.getInstance().getMessage(messageID, args);
         sendMessage(player, color, message, delayInTicks);
     }
 
     //sends a color-coded message to a player
-    public static void sendMessage(Player player, ChatColor color, String message)
-    {
-        if(message == null || message.length() == 0) return;
+    public static void sendMessage(Player player, ChatColor color, String message) {
+        if (message == null || message.length() == 0) return;
 
-        if(player == null)
-        {
-            logger.info(color + message);
-        }
-        else
-        {
+        if (player == null) {
+            logger.info(ChatColor.RED + "[XRayMonitor] " + color + message);
+        } else {
             player.sendMessage(color + message);
         }
     }
 
-    public static void sendMessage(Player player, ChatColor color, String message, long delayInTicks)
-    {
+    public static void sendMessage(Player player, ChatColor color, String message, long delayInTicks) {
         SendPlayerMessageTask task = new SendPlayerMessageTask(player, color, message);
 
         //Only schedule if there should be a delay. Otherwise, send the message right now, else the message will appear out of order.
-        if(delayInTicks > 0)
-        {
+        if (delayInTicks > 0) {
             XRayMonitor.getInstance().getServer().getScheduler().runTaskLater(XRayMonitor.getInstance(), task, delayInTicks);
-        }
-        else
-        {
+        } else {
             task.run();
         }
     }
 
-    private void loadMessages()
-    {
-        Messages [] messageIDs = Messages.values();
+    private void loadMessages() {
+        Messages[] messageIDs = Messages.values();
         this.messages = new String[Messages.values().length];
 
         HashMap<String, CustomizableMessage> defaults = new HashMap<String, CustomizableMessage>();
+        // initialize defaults
+        this.addDefault(defaults, Messages.Reloaded, "Config reloaded.", null);
+        this.addDefault(defaults, Messages.NoPermissionForCommand, "You don't have permission to do that.", null);
+        this.addDefault(defaults, Messages.WorldNotFound, "World not found.", null);
+        this.addDefault(defaults, Messages.DefaultWorldNotFound, "Default world does not exist. Please check your configuration file.", null);
+        this.addDefault(defaults, Messages.CalculationOre, "Calculating ore ratios for {0}.", "0: a player");
+        this.addDefault(defaults, Messages.PleaseBePatient, "Please be patient, this may take a minute.", null);
+        this.addDefault(defaults, Messages.Stones, "Stones: {0}", "0: number of stone blocks.");
+
+        this.addDefault(defaults, Messages.Diamond, "Diamond: {0}", "0: number of diamond ore blocks.");
+        this.addDefault(defaults, Messages.Emerald, "Emerald: {0}", "0: number of emerald ore blocks.");
+        this.addDefault(defaults, Messages.Gold, "Gold: {0}", "0: number of gold ore blocks.");
+        this.addDefault(defaults, Messages.Lapis, "Lapis: {0}", "0: number of lapis ore blocks.");
+        this.addDefault(defaults, Messages.Iron, "Iron: {0}", "0: number of iron ore  blocks.");
+        this.addDefault(defaults, Messages.Redstone, "Redstone: {0}", "0: number of redstone ore blocks.");
+        this.addDefault(defaults, Messages.Coal, "Coal: {0}", "0: number of coal ore blocks.");
+        this.addDefault(defaults, Messages.Mossy, "Mossy: {0}", "0: number of mossy blocks.");
+        this.addDefault(defaults, Messages.Spawners, "Spawners: {0}", "0: number of spawners.");
 
         //initialize defaults
-        this.addDefault(defaults, Messages.RespectingClaims, "Now respecting claims.", null);
-        this.addDefault(defaults, Messages.IgnoringClaims, "Now ignoring claims.", null);
         this.addDefault(defaults, Messages.NoCreativeUnClaim, "You can't unclaim this land.  You can only make this claim larger or create additional claims.", null);
-        this.addDefault(defaults, Messages.SuccessfulAbandon, "Claims abandoned.  You now have {0} available claim blocks.", "0: remaining blocks");
         this.addDefault(defaults, Messages.RestoreNatureActivate, "Ready to restore some nature!  Right click to restore nature, and use /BasicClaims to stop.", null);
         this.addDefault(defaults, Messages.RestoreNatureAggressiveActivate, "Aggressive mode activated.  Do NOT use this underneath anything you want to keep!  Right click to aggressively restore nature, and use /BasicClaims to stop.", null);
         this.addDefault(defaults, Messages.FillModeActive, "Fill mode activated with radius {0}.  Right click an area to fill.", "0: fill radius");
@@ -330,7 +336,6 @@ public class XRayMonitor extends JavaPlugin {
         this.addDefault(defaults, Messages.NoTNTDamageAboveSeaLevel, "Warning: TNT will not destroy blocks above sea level.", null);
         this.addDefault(defaults, Messages.NoTNTDamageClaims, "Warning: TNT will not destroy claimed blocks.", null);
         this.addDefault(defaults, Messages.IgnoreClaimsAdvertisement, "To override, use /IgnoreClaims.", null);
-        this.addDefault(defaults, Messages.NoPermissionForCommand, "You don't have permission to do that.", null);
         this.addDefault(defaults, Messages.ClaimsListNoPermission, "You don't have permission to get information about another player's land claims.", null);
         this.addDefault(defaults, Messages.ExplosivesDisabled, "This claim is now protected from explosions.  Use /ClaimExplosions again to disable.", null);
         this.addDefault(defaults, Messages.ExplosivesEnabled, "This claim is now vulnerable to explosions.  Use /ClaimExplosions again to re-enable protections.", null);
@@ -366,10 +371,6 @@ public class XRayMonitor extends JavaPlugin {
         this.addDefault(defaults, Messages.UnSeparateConfirmation, "Those players will no longer ignore each other in chat.", null);
         this.addDefault(defaults, Messages.NotIgnoringAnyone, "You're not ignoring anyone.", null);
         this.addDefault(defaults, Messages.TrustListHeader, "Explicit permissions here:", null);
-        this.addDefault(defaults, Messages.Manage, "Manage", null);
-        this.addDefault(defaults, Messages.Build, "Build", null);
-        this.addDefault(defaults, Messages.Containers, "Containers", null);
-        this.addDefault(defaults, Messages.Access, "Access", null);
         this.addDefault(defaults, Messages.HasSubclaimRestriction, "This subclaim does not inherit permissions from the parent", null);
         this.addDefault(defaults, Messages.StartBlockMath, "{0} blocks from play + {1} bonus = {2} total.", null);
         this.addDefault(defaults, Messages.ClaimsListHeader, "Claims:", null);
@@ -399,7 +400,6 @@ public class XRayMonitor extends JavaPlugin {
         this.addDefault(defaults, Messages.NoProfanity, "Please moderate your language.", null);
         this.addDefault(defaults, Messages.IsIgnoringYou, "That player is ignoring you.", null);
         this.addDefault(defaults, Messages.ConsoleOnlyCommand, "That command may only be executed from the server console.", null);
-        this.addDefault(defaults, Messages.WorldNotFound, "World not found.", null);
         this.addDefault(defaults, Messages.TooMuchIpOverlap, "Sorry, there are too many players logged in with your IP address.", null);
 
         this.addDefault(defaults, Messages.StandInSubclaim, "You need to be standing in a subclaim to restrict it", null);
@@ -414,15 +414,13 @@ public class XRayMonitor extends JavaPlugin {
         FileConfiguration config = YamlConfiguration.loadConfiguration(new File(messagesFilePath));
 
         //for each message ID
-        for(int i = 0; i < messageIDs.length; i++)
-        {
+        for (int i = 0; i < messageIDs.length; i++) {
             //get default for this message
             Messages messageID = messageIDs[i];
             CustomizableMessage messageData = defaults.get(messageID.name());
 
             //if default is missing, log an error and use some fake data for now so that the plugin can run
-            if(messageData == null)
-            {
+            if (messageData == null) {
                 logger.info("Missing message for " + messageID.name() + ".  Please contact the developer.");
                 messageData = new CustomizableMessage(messageID, "Missing message!  ID: " + messageID.name() + ".  Please contact a server admin.", null);
             }
@@ -432,26 +430,21 @@ public class XRayMonitor extends JavaPlugin {
             config.set("Messages." + messageID.name() + ".Text", this.messages[messageID.ordinal()]);
 
             //support color codes
-            if(messageID != Messages.HowToClaimRegex)
-            {
-                this.messages[messageID.ordinal()] = this.messages[messageID.ordinal()].replace('$', (char)0x00A7);
+            if (messageID != Messages.HowToClaimRegex) {
+                this.messages[messageID.ordinal()] = this.messages[messageID.ordinal()].replace('$', (char) 0x00A7);
             }
 
-            if(messageData.notes != null)
-            {
+            if (messageData.notes != null) {
                 messageData.notes = config.getString("Messages." + messageID.name() + ".Notes", messageData.notes);
                 config.set("Messages." + messageID.name() + ".Notes", messageData.notes);
             }
         }
 
         //save any changes
-        try
-        {
+        try {
             config.options().header("Use a YAML editor like NotepadPlusPlus to edit this file.  \nAfter editing, back up your changes before reloading the server in case you made a syntax error.  \nUse dollar signs ($) for formatting codes, which are documented here: http://minecraft.gamepedia.com/Formatting_codes");
             config.save(XRayMonitor.messagesFilePath);
-        }
-        catch(IOException exception)
-        {
+        } catch (IOException exception) {
             logger.info("Unable to write to the configuration file at \"" + XRayMonitor.messagesFilePath + "\"");
         }
 
@@ -460,18 +453,15 @@ public class XRayMonitor extends JavaPlugin {
     }
 
     private void addDefault(HashMap<String, CustomizableMessage> defaults,
-                            Messages id, String text, String notes)
-    {
+                            Messages id, String text, String notes) {
         CustomizableMessage message = new CustomizableMessage(id, text, notes);
         defaults.put(id.name(), message);
     }
 
-    synchronized public String getMessage(Messages messageID, String... args)
-    {
+    synchronized public String getMessage(Messages messageID, String... args) {
         String message = messages[messageID.ordinal()];
 
-        for(int i = 0; i < args.length; i++)
-        {
+        for (int i = 0; i < args.length; i++) {
             String param = args[i];
             message = message.replace("{" + i + "}", param);
         }
