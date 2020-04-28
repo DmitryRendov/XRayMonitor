@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -14,9 +16,13 @@ public class Checkers
 {
     private static XRayMonitor plugin = XRayMonitor.getInstance();
     private static LogBlockLookup lb = new LogBlockLookup();
+    private static Logger logger = plugin.getLogger();
 
     public void checkGlobal(final String name, final CommandSender sender, final String world, final int hours)
     {
+
+        logger.info(ChatColor.RED + "DEBUG: checkGlobal");
+
         new BukkitRunnable()
         {
             @Override
@@ -265,6 +271,7 @@ public class Checkers
 
     public void checkSingle(final String name, final CommandSender sender, final String oreName, final String world, final int hours)
     {
+        logger.info("DEBUG: getting into checkSingle");
         new BukkitRunnable()
         {
             @Override
@@ -282,23 +289,22 @@ public class Checkers
                         count_xyz = Checkers.lb.oreLookup(name, oreName, world, hours);
                     }
 
-                    String mat_1_name = Material.getMaterial(oreName).toString();
-
+                    logger.info("DEBUG: checking single material=" + oreName);
                     sender.sendMessage(Checkers.plugin.msgBorder);
                     sender.sendMessage(ChatColor.GREEN + "[xraymonitor: " + ChatColor.GOLD + name);
                     sender.sendMessage(Checkers.plugin.msgBorder);
-                    sender.sendMessage("Stones: " + String.valueOf(count_stone));
+                    sender.sendMessage("Stones: " + count_stone);
 
                     String s = "";
                     if (count_xyz > 0)
                     {
                         float d = (float)(count_xyz * 100.0D / count_stone);
                         s = String.valueOf(d) + "000000000";
-                        sender.sendMessage(mat_1_name + ": " + String.valueOf(Float.parseFloat(s.substring(0, s.lastIndexOf('.') + 3))) + "% (" + String.valueOf(count_xyz) + ")");
+                        sender.sendMessage(oreName + ": " + String.valueOf(Float.parseFloat(s.substring(0, s.lastIndexOf('.') + 3))) + "% (" + String.valueOf(count_xyz) + ")");
                     }
                     else
                     {
-                        sender.sendMessage(mat_1_name + ": -");
+                        sender.sendMessage(oreName + ": -");
                     }
                 }
                 catch (SQLException e)
@@ -311,6 +317,7 @@ public class Checkers
 
     public void listAllXRayers(CommandSender sender, String world, String oreName, float maxrate, int hours)
     {
+        logger.info("DEBUG: getting into listAllXRayers");
         List<String[]> playerOreStone = new ArrayList();
         if (plugin.getConfig().getString("logging_plugin").equalsIgnoreCase("logblock"))
         {

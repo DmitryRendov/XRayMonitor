@@ -16,7 +16,6 @@ public class Listeners
     private XRayMonitor plugin;
 
     Listeners() {
-
         this.plugin = XRayMonitor.getInstance();
     }
 
