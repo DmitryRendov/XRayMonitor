@@ -25,22 +25,22 @@ public class Cmd
             player = (Player) sender;
         }
 
-        // xcheck
-        if (cmd.getName().equalsIgnoreCase("xcheck")) {
-            if (sender.hasPermission("xcheck.check") || sender.isOp()) {
+        // xrm
+        if (cmd.getName().equalsIgnoreCase("xrm")) {
+            if (sender.hasPermission("xrm.check") || sender.isOp()) {
                 String playerName = "";
                 if (args.length > 0) {
                     if (!args[0].contains(":")) {
                         playerName = args[0];
                     }
                 } else {
-                    this.plugin.showInfo(sender);
+                    plugin.showInfo(sender);
                     return true;
                 }
                 String world = "";
                 int hours = -1;
                 String oreName = "";
-                float maxrate = 0.0f;
+                float rate = 0.0f;
                 HashMap<String, String> hm = new HashMap<String, String>();
                 String[] nonPlayerArgs = new String[args.length];
                 try {
@@ -69,9 +69,13 @@ public class Cmd
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (hm.containsKey("maxrate")) {
-                    maxrate = Float.parseFloat(hm.get("maxrate"));
-                    logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " maxrate=" + maxrate);
+                if (hm.containsKey("rate")) {
+                    rate = Float.parseFloat(hm.get("rate"));
+                    logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " rate=" + rate);
+                    if ( rate <= 0 ) {
+                        XRayMonitor.sendMessage(player, TextMode.Err, Messages.ErrRatePositive);
+                        return true;
+                    }
                 }
                 if (hm.containsKey("since")) {
                     hours = Integer.parseInt(hm.get("since"));
@@ -99,7 +103,7 @@ public class Cmd
                     return true;
                 }
                 if (args.length == 2 && args[0].equalsIgnoreCase("clear")) {
-                    if (sender.hasPermission("xcheck.clear") || sender.isOp()) {
+                    if (sender.hasPermission("xrm.clear") || sender.isOp()) {
                         try {
                             plugin.clearPlayer(sender, args[1]);
                         } catch (Exception e) {
@@ -150,14 +154,14 @@ public class Cmd
                     }
                 }
                 if (world.length() > 0 && !oreName.isEmpty()) {
-                    if (playerName.equalsIgnoreCase("all") && maxrate > 0.0f) {
-                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run listAllXRayers with: sender=" + sender + " world=" + world + " oreName=" + oreName + " maxrate=" + maxrate + " hours=" + hours);
-                        new Thread(new CustomRunnable(sender, world, oreName, maxrate, hours) {
+                    if (playerName.equalsIgnoreCase("all") && rate > 0.0f) {
+                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run listAllXRayers with: sender=" + sender + " world=" + world + " oreName=" + oreName + " rate=" + rate + " hours=" + hours);
+                        new Thread(new CustomRunnable(sender, world, oreName, rate, hours) {
 
                             @Override
                             public void run() {
-                                logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run listAllXRayers with: sender=" + this.sender + " this.world=" + this.world + " this.oreName=" + this.oreName + " this.maxrate=" + this.maxrate + " this.hours=" + this.hours);
-                                Cmd.this.checker.listAllXRayers(this.sender, this.world, this.oreName, this.maxrate, this.hours);
+                                logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run listAllXRayers with: sender=" + this.sender + " this.world=" + this.world + " this.oreName=" + this.oreName + " this.rate=" + this.rate + " this.hours=" + this.hours);
+                                Cmd.this.checker.listAllXRayers(this.sender, this.world, this.oreName, this.rate, this.hours);
                             }
                         }).start();
                         return true;
@@ -175,11 +179,11 @@ public class Cmd
                         XRayMonitor.sendMessage(player, TextMode.Err, Messages.DefaultWorldNotFound);
                         return true;
                     }
-                    if (playerName.equalsIgnoreCase("all") && maxrate > 0.0f) {
+                    if (playerName.equalsIgnoreCase("all") && rate > 0.0f) {
                         final CommandSender s = sender;
                         final String w = world;
                         final String on = oreName;
-                        final float mr = maxrate;
+                        final float mr = rate;
                         final int h = hours;
                         new BukkitRunnable() {
                             public void run() {

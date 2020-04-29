@@ -1,0 +1,43 @@
+default_world: survival
+checkOnPlayerJoin:
+  warningMessage: '%player% has higher than average stats for %ores% and may be a
+    cheater. Watch carefully.'
+commandOnXrayerJoin: none
+diamond: true
+gold: true
+lapis: true
+iron: true
+redstone: true
+coal: true
+mossy: true
+emerald: true
+spawners: true
+diamond_warn: 3.2
+diamond_confirmed: 3.8
+gold_warn: 8.0
+gold_confirmed: 10.0
+emerald_warn: 0.3
+emerald_confirmed: 0.5
+lapis_warn: 3.2
+lapis_confirmed: 3.8
+iron_warn: 40.0
+iron_confirmed: 100.0
+redstone_warn: 25.0
+redstone_confirmed: 65.0
+coal_warn: 50.0
+coal_confirmed: 100.0
+mossy_warn: 35.0
+mossy_confirmed: 90.0
+spawners_warn: 1.6
+spawners_confirmed: 2.2
+logOreBreaks:
+  diamond: true
+  emerald: true
+  iron: false
+  gold: false
+  redstone: false
+  coal: false
+  lapis: false
+  mossy: false
+  spawners: false
+logging_plugin: logblock

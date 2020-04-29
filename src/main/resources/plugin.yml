@@ -8,20 +8,20 @@ softdepend: [LogBlock]
 api-version: 1.13
 
 commands:
-  xcheck:
+  xrm:
     description: Check for a given player, enter /xcheck reload to reload the config
     usage: |
-      /xcheck <player>
-      /xcheck <player> world:<world_name>
-      /xcheck all
+      /xrm <player>
+      /xrm Player world:survival
+      /xrm all ore:diamond_ore rate:3
 
-permissions: 
-  xcheck.check:
+permissions:
+  xrm.check:
     description: Allows the XRayMonitor to check players
     default: false
-  xcheck.receive:
+  xrm.receive:
     description: These members will receive messages when a potential cheater joins the game, and when ores are broken
     default: false
-  xcheck.bypasscheck:
+  xrm.bypasscheck:
     description: These members will be skipped on login check
     default: false

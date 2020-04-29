@@ -7,15 +7,15 @@ public class CustomRunnable
     CommandSender sender;
     String world;
     String oreName;
-    float maxrate;
+    float rate;
     int hours;
 
-    CustomRunnable(CommandSender sender, String world, String oreName, float maxrate, int hours) {
+    CustomRunnable(CommandSender sender, String world, String oreName, float rate, int hours) {
         this.sender = sender;
         this.hours = hours;
         this.world = world;
         this.oreName = oreName;
-        this.maxrate = maxrate;
+        this.rate = rate;
     }
 
     @Override
