@@ -6,10 +6,8 @@ import me.drendov.xraymonitor.XRayMonitor;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -18,25 +16,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Checkers {
-    private static XRayMonitor plugin = XRayMonitor.getInstance();
+    private static XRayMonitor instance = XRayMonitor.getInstance();
     private static LogBlockLookup lb = new LogBlockLookup();
-    private static Logger logger = plugin.getLogger();
 
     public void checkGlobal(final String name, final CommandSender sender, final String world, final int hours) {
-
-        logger.info(ChatColor.RED + "DEBUG: checkGlobal");
 
         new BukkitRunnable() {
             @Override
             public void run() {
 
-                Player player = null;
-                if (sender instanceof Player) {
-                    player = (Player) sender;
-                }
+                Player player = XRayMonitor.isSenderPlayer(sender);
 
-                if (!Checkers.plugin.checkWorld(world)) {
+                if (!instance.isWorldExist(world)) {
                     XRayMonitor.sendMessage(player, TextMode.Err, Messages.DefaultWorldNotFound);
+                    return;
                 }
 
                 try {
@@ -58,7 +51,7 @@ public class Checkers {
                     int emerald_count = 0;
                     int spawner_count = 0;
 
-                    if (plugin.getConfig().getString("logging_plugin").equalsIgnoreCase("logblock")) {
+                    if (instance.getConfig().getString("logging_plugin").equalsIgnoreCase("logblock")) {
                         stone = Checkers.lb.oreLookup(name, "stone", world, hours);
                         diorite = Checkers.lb.oreLookup(name, "diorite", world, hours);
                         andesite = Checkers.lb.oreLookup(name, "andesite", world, hours);
@@ -74,18 +67,18 @@ public class Checkers {
                         spawner_count = Checkers.lb.oreLookup(name, "spawner", world, hours);
                     }
 
-                    sender.sendMessage(Checkers.plugin.msgBorder);
                     int stones = stone + diorite + andesite + granite;
+                    XRayMonitor.sendMessage(player, TextMode.Info, Messages.MsgBorder);
                     XRayMonitor.sendMessage(player, TextMode.Info, Messages.Stones, String.valueOf(stones));
 
                     String s;
                     ChatColor ccolor;
 
-                    if ((Checkers.plugin.config.isActive("diamond")) && (diamond_count > 0)) {
+                    if ((Checkers.instance.config.isActive("diamond")) && (diamond_count > 0)) {
                         float d = (float) (diamond_count * 100.0D / stones);
-                        if (d > Checkers.plugin.config.getRate("confirmed", "diamond")) {
+                        if (d > Checkers.instance.config.getRate("confirmed", "diamond")) {
                             ccolor = TextMode.Err;
-                        } else if (d > Checkers.plugin.config.getRate("warn", "diamond")) {
+                        } else if (d > Checkers.instance.config.getRate("warn", "diamond")) {
                             ccolor = TextMode.Instr;
                         } else {
                             ccolor = TextMode.Success;
@@ -95,14 +88,14 @@ public class Checkers {
                         s = d + "000000000";
                         XRayMonitor.sendMessage(player, ccolor, Messages.Diamond, Float.parseFloat(s.substring(0, s.lastIndexOf('.') + 3)) + "% (" + diamond_count + ")");
                     } else {
-                        XRayMonitor.sendMessage(player, ChatColor.WHITE, Messages.Diamond, "-");
+                        XRayMonitor.sendMessage(player, ChatColor.GRAYz, Messages.Diamond, "-");
                     }
 
-                    if ((Checkers.plugin.config.isActive("gold")) && (gold_count > 0)) {
+                    if ((Checkers.instance.config.isActive("gold")) && (gold_count > 0)) {
                         float d = (float) (gold_count * 100.0D / stones);
-                        if (d > Checkers.plugin.config.getRate("confirmed", "gold")) {
+                        if (d > Checkers.instance.config.getRate("confirmed", "gold")) {
                             ccolor = TextMode.Err;
-                        } else if (d > Checkers.plugin.config.getRate("warn", "gold")) {
+                        } else if (d > Checkers.instance.config.getRate("warn", "gold")) {
                             ccolor = TextMode.Instr;
                         } else {
                             ccolor = TextMode.Success;
@@ -112,13 +105,13 @@ public class Checkers {
                         s = d + "000000000";
                         XRayMonitor.sendMessage(player, ccolor, Messages.Gold, Float.parseFloat(s.substring(0, s.lastIndexOf('.') + 3)) + "% (" + gold_count + ")");
                     } else {
-                        XRayMonitor.sendMessage(player, ChatColor.WHITE, Messages.Gold, "-");
+                        XRayMonitor.sendMessage(player, ChatColor.GRAY, Messages.Gold, "-");
                     }
-                    if ((Checkers.plugin.config.isActive("lapis")) && (lapis_count > 0)) {
+                    if ((Checkers.instance.config.isActive("lapis")) && (lapis_count > 0)) {
                         float d = (float) (lapis_count * 100.0D / stones);
-                        if (d > Checkers.plugin.config.getRate("confirmed", "lapis")) {
+                        if (d > Checkers.instance.config.getRate("confirmed", "lapis")) {
                             ccolor = TextMode.Err;
-                        } else if (d > Checkers.plugin.config.getRate("warn", "lapis")) {
+                        } else if (d > Checkers.instance.config.getRate("warn", "lapis")) {
                             ccolor = TextMode.Instr;
                         } else {
                             ccolor = TextMode.Success;
@@ -128,13 +121,13 @@ public class Checkers {
                         s = d + "000000000";
                         XRayMonitor.sendMessage(player, ccolor, Messages.Lapis, Float.parseFloat(s.substring(0, s.lastIndexOf('.') + 3)) + "% (" + lapis_count + ")");
                     } else {
-                        XRayMonitor.sendMessage(player, ChatColor.WHITE, Messages.Lapis, "-");
+                        XRayMonitor.sendMessage(player, ChatColor.GRAY, Messages.Lapis, "-");
                     }
-                    if ((Checkers.plugin.config.isActive("emerald")) && (emerald_count > 0)) {
+                    if ((Checkers.instance.config.isActive("emerald")) && (emerald_count > 0)) {
                         float d = (float) (emerald_count * 100.0D / stones);
-                        if (d > Checkers.plugin.config.getRate("confirmed", "emerald")) {
+                        if (d > Checkers.instance.config.getRate("confirmed", "emerald")) {
                             ccolor = TextMode.Err;
-                        } else if (d > Checkers.plugin.config.getRate("warn", "emerald")) {
+                        } else if (d > Checkers.instance.config.getRate("warn", "emerald")) {
                             ccolor = TextMode.Instr;
                         } else {
                             ccolor = TextMode.Success;
@@ -145,13 +138,13 @@ public class Checkers {
                         XRayMonitor.sendMessage(player, ccolor, Messages.Emerald, Float.parseFloat(s.substring(0, s.lastIndexOf('.') + 3)) + "% (" + emerald_count + ")");
 
                     } else {
-                        XRayMonitor.sendMessage(player, ChatColor.WHITE, Messages.Emerald, "-");
+                        XRayMonitor.sendMessage(player, ChatColor.GRAY, Messages.Emerald, "-");
                     }
-                    if ((Checkers.plugin.config.isActive("iron")) && (iron_count > 0)) {
+                    if ((Checkers.instance.config.isActive("iron")) && (iron_count > 0)) {
                         float d = (float) (iron_count * 100.0D / stones);
-                        if (d > Checkers.plugin.config.getRate("confirmed", "iron")) {
+                        if (d > Checkers.instance.config.getRate("confirmed", "iron")) {
                             ccolor = TextMode.Err;
-                        } else if (d > Checkers.plugin.config.getRate("warn", "iron")) {
+                        } else if (d > Checkers.instance.config.getRate("warn", "iron")) {
                             ccolor = TextMode.Instr;
                         } else {
                             ccolor = TextMode.Success;
@@ -161,13 +154,13 @@ public class Checkers {
                         s = d + "000000000";
                         XRayMonitor.sendMessage(player, ccolor, Messages.Iron, Float.parseFloat(s.substring(0, s.lastIndexOf('.') + 3)) + "% (" + iron_count + ")");
                     } else {
-                        XRayMonitor.sendMessage(player, ChatColor.WHITE, Messages.Iron, "-");
+                        XRayMonitor.sendMessage(player, ChatColor.GRAY, Messages.Iron, "-");
                     }
-                    if ((Checkers.plugin.config.isActive("redstone")) && (redstone_count > 0)) {
+                    if ((Checkers.instance.config.isActive("redstone")) && (redstone_count > 0)) {
                         float d = (float) (redstone_count * 100.0D / stones);
-                        if (d > Checkers.plugin.config.getRate("confirmed", "redstone")) {
+                        if (d > Checkers.instance.config.getRate("confirmed", "redstone")) {
                             ccolor = TextMode.Err;
-                        } else if (d > Checkers.plugin.config.getRate("warn", "redstone")) {
+                        } else if (d > Checkers.instance.config.getRate("warn", "redstone")) {
                             ccolor = TextMode.Instr;
                         } else {
                             ccolor = TextMode.Success;
@@ -178,13 +171,13 @@ public class Checkers {
                         XRayMonitor.sendMessage(player, ccolor, Messages.Redstone, Float.parseFloat(s.substring(0, s.lastIndexOf('.') + 3)) + "% (" + redstone_count + ")");
 
                     } else {
-                        XRayMonitor.sendMessage(player, ChatColor.WHITE, Messages.Redstone, "-");
+                        XRayMonitor.sendMessage(player, ChatColor.GRAY, Messages.Redstone, "-");
                     }
-                    if ((Checkers.plugin.config.isActive("coal")) && (coal_count > 0)) {
+                    if ((Checkers.instance.config.isActive("coal")) && (coal_count > 0)) {
                         float d = (float) (coal_count * 100.0D / stones);
-                        if (d > Checkers.plugin.config.getRate("confirmed", "coal")) {
+                        if (d > Checkers.instance.config.getRate("confirmed", "coal")) {
                             ccolor = TextMode.Err;
-                        } else if (d > Checkers.plugin.config.getRate("warn", "coal")) {
+                        } else if (d > Checkers.instance.config.getRate("warn", "coal")) {
                             ccolor = TextMode.Instr;
                         } else {
                             ccolor = TextMode.Success;
@@ -194,13 +187,13 @@ public class Checkers {
                         s = d + "000000000";
                         XRayMonitor.sendMessage(player, ccolor, Messages.Coal, Float.parseFloat(s.substring(0, s.lastIndexOf('.') + 3)) + "% (" + coal_count + ")");
                     } else {
-                        XRayMonitor.sendMessage(player, ChatColor.WHITE, Messages.Coal, "-");
+                        XRayMonitor.sendMessage(player, ChatColor.GRAY, Messages.Coal, "-");
                     }
-                    if ((Checkers.plugin.config.isActive("mossy")) && (mossy_count > 0)) {
+                    if ((Checkers.instance.config.isActive("mossy")) && (mossy_count > 0)) {
                         float d = (float) (mossy_count * 100.0D / stones);
-                        if (d > Checkers.plugin.config.getRate("confirmed", "mossy")) {
+                        if (d > Checkers.instance.config.getRate("confirmed", "mossy")) {
                             ccolor = TextMode.Err;
-                        } else if (d > Checkers.plugin.config.getRate("warn", "mossy")) {
+                        } else if (d > Checkers.instance.config.getRate("warn", "mossy")) {
                             ccolor = TextMode.Instr;
                         } else {
                             ccolor = TextMode.Success;
@@ -210,13 +203,13 @@ public class Checkers {
                         s = d + "000000000";
                         XRayMonitor.sendMessage(player, ccolor, Messages.Mossy, Float.parseFloat(s.substring(0, s.lastIndexOf('.') + 3)) + "% (" + mossy_count + ")");
                     } else {
-                        XRayMonitor.sendMessage(player, ChatColor.WHITE, Messages.Mossy, "-");
+                        XRayMonitor.sendMessage(player, ChatColor.GRAY, Messages.Mossy, "-");
                     }
-                    if ((Checkers.plugin.config.isActive("spawners")) && (spawner_count > 0)) {
+                    if ((Checkers.instance.config.isActive("spawners")) && (spawner_count > 0)) {
                         float d = (float) (spawner_count * 100.0D / stones);
-                        if (d > Checkers.plugin.config.getRate("confirmed", "spawners")) {
+                        if (d > Checkers.instance.config.getRate("confirmed", "spawners")) {
                             ccolor = TextMode.Err;
-                        } else if (d > Checkers.plugin.config.getRate("warn", "spawners")) {
+                        } else if (d > Checkers.instance.config.getRate("warn", "spawners")) {
                             ccolor = TextMode.Instr;
                         } else {
                             ccolor = TextMode.Success;
@@ -226,7 +219,7 @@ public class Checkers {
                         s = d + "000000000";
                         XRayMonitor.sendMessage(player, ccolor, Messages.Spawners, Float.parseFloat(s.substring(0, s.lastIndexOf('.') + 3)) + "% (" + spawner_count + ")");
                     } else {
-                        XRayMonitor.sendMessage(player, ChatColor.WHITE, Messages.Spawners, "-");
+                        XRayMonitor.sendMessage(player, ChatColor.GRAY, Messages.Spawners, "-");
                     }
 
                     // Adjust level for new players
@@ -236,7 +229,7 @@ public class Checkers {
                         level *= 2;
                     }
                     notifyXrayLevel(player, level);
-                    sender.sendMessage(Checkers.plugin.msgBorder);
+                    XRayMonitor.sendMessage(player, TextMode.Info, Messages.MsgBorder);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -260,18 +253,19 @@ public class Checkers {
                 }
             }
 
-        }.runTaskAsynchronously(plugin);
+        }.runTaskAsynchronously(instance);
     }
 
     public void checkSingle(final String name, final CommandSender sender, final String oreName, final String world, final int hours) {
-        logger.info("DEBUG: getting into checkSingle");
         new BukkitRunnable() {
             @Override
             public void run() {
                 try {
-                    Player player = null;
-                    if (sender instanceof Player) {
-                        player = (Player) sender;
+                    final Material mat = Material.matchMaterial(oreName);
+                    Player player = XRayMonitor.isSenderPlayer(sender);
+                    if (mat == null) {
+                        XRayMonitor.sendMessage(player, TextMode.Err, Messages.NoMaterial, oreName);
+                        throw new IllegalArgumentException("No material matching: '" + oreName + "'");
                     }
 
                     XRayMonitor.sendMessage(player, TextMode.Info, Messages.CalcPlayerOre, TextMode.Warn + name);
@@ -281,7 +275,7 @@ public class Checkers {
                     int andesite = 0;
                     int granite = 0;
                     int count_xyz = 0;
-                    if (Checkers.plugin.getConfig().getString("logging_plugin").equalsIgnoreCase("logblock")) {
+                    if (Checkers.instance.getConfig().getString("logging_plugin").equalsIgnoreCase("logblock")) {
                         stone = Checkers.lb.oreLookup(name, "stone", world, hours);
                         diorite = Checkers.lb.oreLookup(name, "diorite", world, hours);
                         andesite = Checkers.lb.oreLookup(name, "andesite", world, hours);
@@ -290,9 +284,8 @@ public class Checkers {
                         count_xyz = Checkers.lb.oreLookup(name, oreName, world, hours);
                     }
 
-                    logger.info("DEBUG: checking single material=" + oreName);
                     int stones = stone + diorite + andesite + granite;
-                    sender.sendMessage(Checkers.plugin.msgBorder);
+                    XRayMonitor.sendMessage(player, TextMode.Info, Messages.MsgBorder);
                     XRayMonitor.sendMessage(player, TextMode.Info, Messages.Stones, String.valueOf(stones));
 
 
@@ -300,35 +293,32 @@ public class Checkers {
                     if (count_xyz > 0) {
                         float d = (float) (count_xyz * 100.0D / stones);
                         s = d + "000000000";
-                        sender.sendMessage(oreName + ": " + String.valueOf(Float.parseFloat(s.substring(0, s.lastIndexOf('.') + 3))) + "% (" + String.valueOf(count_xyz) + ")");
+                        XRayMonitor.sendMessage(player, TextMode.Info, Messages.CustomOre, oreName, Float.parseFloat(s.substring(0, s.lastIndexOf('.') + 3)) + "% (" + String.valueOf(count_xyz) + ")");
                     } else {
-                        sender.sendMessage(oreName + ": -");
+                        XRayMonitor.sendMessage(player, ChatColor.WHITE, Messages.CustomOre, oreName, "-");
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
-        }.runTaskAsynchronously(plugin);
+        }.runTaskAsynchronously(instance);
     }
 
-    public void listAllXRayers(CommandSender sender, String world, String oreName, float maxrate, int hours) {
-        logger.info("DEBUG: getting into listAllXRayers");
+    public void checkAllOnlinePlayers(CommandSender sender, String world, String oreName, float maxrate, int hours) {
         List<String[]> playerOreStone = new ArrayList();
         final Material mat = Material.matchMaterial(oreName);
-        Player player = null;
-        if (sender instanceof Player) {
-            player = (Player) sender;
-        }
+        Player player = XRayMonitor.isSenderPlayer(sender);
         if (mat == null) {
+            XRayMonitor.sendMessage(player, TextMode.Err, Messages.NoMaterial, oreName);
             throw new IllegalArgumentException("No material matching: '" + oreName + "'");
         }
-        if (Objects.requireNonNull(plugin.getConfig().getString("logging_plugin")).equalsIgnoreCase("logblock")) {
+        if (Objects.requireNonNull(instance.getConfig().getString("logging_plugin")).equalsIgnoreCase("logblock")) {
             XRayMonitor.sendMessage(player, TextMode.Info, Messages.CalcAllPlayersOreRate, mat.toString(), String.valueOf(maxrate));
             playerOreStone = lb.playerLookup(sender, oreName, world);
         }
-        sender.sendMessage(plugin.msgBorder);
+        XRayMonitor.sendMessage(player, TextMode.Info, Messages.MsgBorder);
         XRayMonitor.sendMessage(player, TextMode.Info, Messages.AllPlayersOnOre, mat.toString());
-        sender.sendMessage(plugin.msgBorder);
+        XRayMonitor.sendMessage(player, TextMode.Info, Messages.MsgBorder);
         if (playerOreStone == null) {
             sender.sendMessage(ChatColor.RED + "playerOreStone is null");
         }
@@ -344,6 +334,6 @@ public class Checkers {
                 }
             }
         }
-        sender.sendMessage(plugin.msgBorder);
+        XRayMonitor.sendMessage(player, TextMode.Info, Messages.MsgBorder);
     }
 }
