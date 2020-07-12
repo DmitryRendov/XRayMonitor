@@ -5,26 +5,28 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class ClearedPlayerFile {
-    private static XRayMonitor plugin;
-    private static File clearedPlayers;
+    private static XRayMonitor instance = XRayMonitor.getInstance();
+    private static Logger logger = instance.getLogger();
+    private static File clearedPlayers = new File(XRayMonitor.clearedPlayerFilePath);
     private static FileConfiguration cpinfo;
     private static List<String> cpList;
 
     static void loadClearedPlayers() {
-        plugin = XRayMonitor.getInstance();
-        if (!clearedPlayers.exists()) {
-            try {
-                clearedPlayers.createNewFile();
-                cpinfo.set("cleared_players", cpList);
-            } catch (IOException e) {
-                plugin.getLogger().log(Level.SEVERE, "[XRayMonitor] An error was encountered while trying to create the ClearedPlayers file.");
-                e.printStackTrace();
+        if (!clearedPlayers.exists()) try {
+            final boolean clearedPlayersNewFile = clearedPlayers.createNewFile();
+            if (!clearedPlayersNewFile) {
+                logger.log(Level.SEVERE, "[XRayMonitor] An error was encountered while trying to create the ClearedPlayers file.");
             }
+            cpinfo.set("cleared_players", cpList);
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "[XRayMonitor] An error was encountered while trying to create the ClearedPlayers file.");
+            e.printStackTrace();
         }
         ClearedPlayerFile.saveClearedPlayers();
     }
@@ -33,7 +35,7 @@ public class ClearedPlayerFile {
         try {
             cpinfo.save(clearedPlayers);
         } catch (IOException e) {
-            plugin.getLogger().log(Level.SEVERE, "[XRayMonitor] An error was encountered while trying to save the ClearedPlayers file.");
+            logger.log(Level.SEVERE, "[XRayMonitor] An error was encountered while trying to save the ClearedPlayers file.");
             e.printStackTrace();
         }
     }
@@ -73,9 +75,8 @@ public class ClearedPlayerFile {
     }
 
     static {
-        clearedPlayers = new File("plugins/XRayMonitor/" + File.separator + "ClearedPlayers.yml");
         cpinfo = YamlConfiguration.loadConfiguration(clearedPlayers);
-        cpList = new ArrayList<String>();
+        cpList = new ArrayList<>();
     }
 }
 

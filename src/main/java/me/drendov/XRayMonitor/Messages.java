@@ -21,6 +21,8 @@ public enum Messages
     Coal,
     Mossy,
     Spawners,
+    CustomOre,
+    NoMaterial,
     VeryLowChanceXRay,
     LowChanceXRay,
     MediumChanceXRay,
@@ -33,5 +35,8 @@ public enum Messages
     HelperThree,
     HelperFour,
     HelperFive,
-    HelperTitle
+    HelperTitle,
+    PluginTitle,
+    MsgBorder,
+    ClearedPlayer
 }

@@ -13,7 +13,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -40,7 +39,7 @@ public class XRayMonitor extends JavaPlugin {
         instance = this;
         logger = instance.getLogger();
 
-        //load up all the messages from messages.yml
+        // load up all the messages from messages.yml
         this.loadMessages();
         logger.info("Customizable messages loaded.");
 
@@ -53,8 +52,8 @@ public class XRayMonitor extends JavaPlugin {
         // register for events
         PluginManager pluginManager = this.getServer().getPluginManager();
 
-        // player events
-        pluginManager.registerEvents((Listener) new Listeners(), (Plugin) this);
+        // register player events
+        pluginManager.registerEvents(new Listeners(), this);
         Objects.requireNonNull(this.getCommand("xrm")).setExecutor(new Cmd());
 
         try
@@ -86,29 +85,23 @@ public class XRayMonitor extends JavaPlugin {
         this.config.setLogger("LogBlock");
     }
 
-    public boolean checkWorld(String world) {
+    public boolean isWorldExist(String world) {
         return this.getServer().getWorld(world) != null;
     }
 
     void showInfo(CommandSender sender) {
-        Player player = null;
-        if (sender instanceof Player) {
-            player = (Player) sender;
-        }
-        XRayMonitor.sendMessage(player, TextMode.Instr, ChatColor.WHITE + "----- " + ChatColor.GREEN + "XRayMonitor v" + this.version + ChatColor.WHITE + " -----");
-        XRayMonitor.sendMessage(player, TextMode.Instr, "/xrm <PlayerName>" + ChatColor.WHITE + " - " + Messages.HelperOne);
-        XRayMonitor.sendMessage(player, TextMode.Instr, "/xrm all" + ChatColor.WHITE + " - " + Messages.HelperTwo);
-        XRayMonitor.sendMessage(player, TextMode.Instr, "/xrm clear <PlayerName>" + ChatColor.WHITE + " - " + Messages.HelperThree);
-        XRayMonitor.sendMessage(player, TextMode.Instr, "/xrm reload" + ChatColor.WHITE + " - " + Messages.HelperFour);
-        XRayMonitor.sendMessage(player, TextMode.Instr, "/xrm help" + ChatColor.WHITE + " - " + Messages.HelperFive);
+        Player player = isSenderPlayer(sender);
+        XRayMonitor.sendMessage(player, TextMode.Instr, Messages.PluginTitle, this.version);
+        XRayMonitor.sendMessage(player, TextMode.Instr, Messages.HelperOne);
+        XRayMonitor.sendMessage(player, TextMode.Instr, Messages.HelperTwo);
+        XRayMonitor.sendMessage(player, TextMode.Instr, Messages.HelperThree);
+        XRayMonitor.sendMessage(player, TextMode.Instr, Messages.HelperFour);
+        XRayMonitor.sendMessage(player, TextMode.Instr, Messages.HelperFive);
     }
 
     void showHelp(CommandSender sender) {
-        Player player = null;
-        if (sender instanceof Player) {
-            player = (Player) sender;
-        }
-        XRayMonitor.sendMessage(player, TextMode.Instr, "----- " + ChatColor.GREEN + Messages.HelperTitle + ChatColor.WHITE + " -----");
+        Player player = isSenderPlayer(sender);
+        XRayMonitor.sendMessage(player, TextMode.Instr, Messages.HelperTitle);
         XRayMonitor.sendMessage(player, TextMode.Instr, "/xrm " + ChatColor.WHITE + "<player> " + ChatColor.RED + " [required]");
         XRayMonitor.sendMessage(player, TextMode.Instr, "/xrm " + ChatColor.WHITE + "world:<world name> " + ChatColor.GREEN + " [optional]");
         XRayMonitor.sendMessage(player, TextMode.Instr, "/xrm " + ChatColor.WHITE + "ore:<ore name> " + ChatColor.GREEN + " [optional, required on /xrm all]");
@@ -118,9 +111,18 @@ public class XRayMonitor extends JavaPlugin {
         XRayMonitor.sendMessage(player, TextMode.Instr, "example for mass check: " + ChatColor.WHITE + "/xrm all ore:diamond_ore rate:3");
     }
 
-    void clearPlayer(CommandSender sender, String player) throws Exception {
-        ClearedPlayerFile.clearPlayer(player);
-        sender.sendMessage(ChatColor.RED + "[XRayMonitor]" + ChatColor.WHITE + " x-ray stats of the player " + player + " have been successfully cleared.");
+    void clearPlayer(CommandSender sender, String playerName) throws Exception {
+        Player player = isSenderPlayer(sender);
+        ClearedPlayerFile.clearPlayer(playerName);
+        XRayMonitor.sendMessage(player, TextMode.Success, Messages.ClearedPlayer, playerName);
+    }
+
+    public static Player isSenderPlayer(CommandSender sender) {
+        Player player = null;
+        if (sender instanceof Player) {
+            player = (Player) sender;
+        }
+        return player;
     }
 
     //sends a color-coded message to a player
@@ -141,7 +143,7 @@ public class XRayMonitor extends JavaPlugin {
         if (player == null) {
             logger.info(color + message);
         } else {
-            player.sendMessage(ChatColor.RED + "[XRayMonitor] " + color + message);
+            player.sendMessage(ChatColor.DARK_AQUA + "[" + ChatColor.DARK_GREEN + "XRM" + ChatColor.DARK_AQUA + "] " + color + message);
         }
     }
 
@@ -182,6 +184,8 @@ public class XRayMonitor extends JavaPlugin {
         this.addDefault(defaults, Messages.Coal, "Coal: {0}", "0: number of coal ore blocks.");
         this.addDefault(defaults, Messages.Mossy, "Mossy: {0}", "0: number of mossy blocks.");
         this.addDefault(defaults, Messages.Spawners, "Spawners: {0}", "0: number of spawners.");
+        this.addDefault(defaults, Messages.CustomOre, "{0}: {1}", "0: name of custom ore; 1:number of custom ore blocks.");
+        this.addDefault(defaults, Messages.NoMaterial, "No material matching: {0}", "0: ore name");
 
         this.addDefault(defaults, Messages.VeryLowChanceXRay, "xLevel: {0}. (x-ray use is very unlikely)", "0: level of x-ray usage");
         this.addDefault(defaults, Messages.LowChanceXRay, "xLevel: {0}. (x-ray use is unlikely).", "0: level of x-ray usage");
@@ -190,12 +194,17 @@ public class XRayMonitor extends JavaPlugin {
         this.addDefault(defaults, Messages.VeryHighChanceXRay, "xLevel: {0}. (very high chance of x-ray).", "0: level of x-ray usage");
         this.addDefault(defaults, Messages.PotentialXrayerWarning, "{0} has higher than average stats for {} and may be a cheater. Watch carefully.", "0: a player; 1: ores list");
         this.addDefault(defaults, Messages.ErrRatePositive, "Rate should be positive number greater than 0.", null);
-        this.addDefault(defaults, Messages.HelperOne, "Calculate a player's x-ray stats.", null);
-        this.addDefault(defaults, Messages.HelperTwo, "Calculate all online players' x-ray stats.", null);
-        this.addDefault(defaults, Messages.HelperThree, "Clears a player's x-ray stats.", null);
-        this.addDefault(defaults, Messages.HelperFour, "Reloads the config.", null);
-        this.addDefault(defaults, Messages.HelperFive, "Displays more detailed command usage.", null);
-        this.addDefault(defaults, Messages.HelperTitle, "XRayMonitor commands:", null);
+        this.addDefault(defaults, Messages.ClearedPlayer, "X-ray stats of the player {0} have been successfully cleared.", "0: a player");
+
+        this.addDefault(defaults, Messages.HelperOne, "/xrm <PlayerName>$f - Calculate a player's x-ray stats.", null);
+        this.addDefault(defaults, Messages.HelperTwo, "/xrm all$f - Calculate all online players' x-ray stats.", null);
+        this.addDefault(defaults, Messages.HelperThree, "/xrm clear <PlayerName>$f - Clears a player's x-ray stats.", null);
+        this.addDefault(defaults, Messages.HelperFour, "/xrm reload$f - Reloads the config.", null);
+        this.addDefault(defaults, Messages.HelperFive, "/xrm help$f - Displays more detailed command usage.", null);
+        this.addDefault(defaults, Messages.HelperTitle, "$f----- $2XRayMonitor commands: $f-----", null);
+        this.addDefault(defaults, Messages.PluginTitle, "$f----- $2XRayMonitor $av{0} $f-----", "0: the plugin version");
+        this.addDefault(defaults, Messages.MsgBorder, "$2-$a-$2-$a-$2-$a-$2-$a-$2-$a-$2-$a-$2-$a-$2-$a-$2-$a-$2-$a-", null);
+
 
         // load the config file
         FileConfiguration config = YamlConfiguration.loadConfiguration(new File(messagesFilePath));
@@ -230,7 +239,6 @@ public class XRayMonitor extends JavaPlugin {
         } catch (IOException exception) {
             logger.info("Unable to write to the configuration file at \"" + XRayMonitor.messagesFilePath + "\"");
         }
-
         defaults.clear();
         System.gc();
     }
@@ -251,6 +259,5 @@ public class XRayMonitor extends JavaPlugin {
 
         return message;
     }
-
 
 }

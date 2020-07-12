@@ -20,10 +20,7 @@ public class Cmd
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-        Player player = null;
-        if (sender instanceof Player) {
-            player = (Player) sender;
-        }
+        Player player = XRayMonitor.isSenderPlayer(sender);
 
         // xrm
         if (cmd.getName().equalsIgnoreCase("xrm")) {
@@ -85,7 +82,7 @@ public class Cmd
                 if (hm.containsKey("world")) {
                     world = hm.get("world");
                     logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " world=" + world);
-                    if (!plugin.checkWorld(world)) {
+                    if (world != null && !plugin.isWorldExist(world)) {
                         XRayMonitor.sendMessage(player, TextMode.Err, Messages.WorldNotFound);
                         return true;
                     }
@@ -116,7 +113,7 @@ public class Cmd
                     return true;
                 }
                 if (playerName.length() == 0) {
-                    this.plugin.showInfo(sender);
+                    plugin.showInfo(sender);
                     return true;
                 }
                 if (world.length() == 0 && oreName.isEmpty()) {
@@ -126,7 +123,7 @@ public class Cmd
                             logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " hours for cleared playerName=" + hours);
                         }
                         world = Config.defaultWorld;
-                        if (world != null && !plugin.checkWorld(world)) {
+                        if (world != null && !plugin.isWorldExist(world)) {
                             XRayMonitor.sendMessage(player, TextMode.Err, Messages.DefaultWorldNotFound);
                             return true;
                         }
@@ -140,7 +137,7 @@ public class Cmd
                 }
                 if (world.length() > 0 && oreName.isEmpty()) {
                     try {
-                        if (!plugin.checkWorld(world)) {
+                        if (!plugin.isWorldExist(world)) {
                             XRayMonitor.sendMessage(player, TextMode.Err, Messages.WorldNotFound);
                             return true;
                         }
@@ -156,13 +153,13 @@ public class Cmd
                 }
                 if (world.length() > 0 && !oreName.isEmpty()) {
                     if (playerName.equalsIgnoreCase("all") && rate > 0.0f) {
-                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run listAllXRayers with: sender=" + sender + " world=" + world + " oreName=" + oreName + " rate=" + rate + " hours=" + hours);
+                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run checkAllOnlinePlayers with: sender=" + sender + " world=" + world + " oreName=" + oreName + " rate=" + rate + " hours=" + hours);
                         new Thread(new CustomRunnable(sender, world, oreName, rate, hours) {
 
                             @Override
                             public void run() {
-                                logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run listAllXRayers with: sender=" + this.sender + " this.world=" + this.world + " this.oreName=" + this.oreName + " this.rate=" + this.rate + " this.hours=" + this.hours);
-                                Cmd.this.checker.listAllXRayers(this.sender, this.world, this.oreName, this.rate, this.hours);
+                                logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run checkAllOnlinePlayers with: sender=" + this.sender + " this.world=" + this.world + " this.oreName=" + this.oreName + " this.rate=" + this.rate + " this.hours=" + this.hours);
+                                Cmd.this.checker.checkAllOnlinePlayers(this.sender, this.world, this.oreName, this.rate, this.hours);
                             }
                         }).start();
                         return true;
@@ -176,7 +173,7 @@ public class Cmd
                 }
                 if (world.length() == 0 && !oreName.isEmpty()) {
                     world = Config.defaultWorld;
-                    if (world != null && !plugin.checkWorld(world)) {
+                    if (world != null && !plugin.isWorldExist(world)) {
                         XRayMonitor.sendMessage(player, TextMode.Err, Messages.DefaultWorldNotFound);
                         return true;
                     }
@@ -188,7 +185,7 @@ public class Cmd
                         final int h = hours;
                         new BukkitRunnable() {
                             public void run() {
-                                Cmd.this.checker.listAllXRayers(s, w, on, mr, h);
+                                Cmd.this.checker.checkAllOnlinePlayers(s, w, on, mr, h);
                             }
                         }.runTaskAsynchronously(plugin);
                         return true;
