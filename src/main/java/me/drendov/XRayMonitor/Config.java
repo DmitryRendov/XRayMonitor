@@ -1,4 +1,4 @@
-package me.drendov.xraymonitor;
+package me.drendov.XRayMonitor;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -19,6 +19,7 @@ public class Config {
         this.config.addDefault("checkOnPlayerJoin", true);
         this.config.addDefault("checkOnPlayerJoin.warningMessage", "%player% has higher than average stats for %ores% and may be a cheater. Watch carefully.");
         this.config.addDefault("commandOnXrayerJoin", "none");
+        this.config.addDefault("notifyConsoleOnJoin", "true");
         this.config.addDefault("diamond", true);
         this.config.addDefault("gold", true);
         this.config.addDefault("lapis", true);
@@ -27,6 +28,7 @@ public class Config {
         this.config.addDefault("coal", true);
         this.config.addDefault("mossy", true);
         this.config.addDefault("emerald", true);
+        this.config.addDefault("ancient_debris", true);
         this.config.addDefault("spawners", true);
         this.config.addDefault("diamond_warn", 3.2);
         this.config.addDefault("diamond_confirmed", 3.8);
@@ -34,6 +36,8 @@ public class Config {
         this.config.addDefault("gold_confirmed", 10.0);
         this.config.addDefault("emerald_warn", 0.3);
         this.config.addDefault("emerald_confirmed", 0.5);
+        this.config.addDefault("ancient_debris_warn", 0.3);
+        this.config.addDefault("ancient_debris_confirmed", 0.5);
         this.config.addDefault("lapis_warn", 3.2);
         this.config.addDefault("lapis_confirmed", 3.8);
         this.config.addDefault("iron_warn", 40.0);
@@ -48,6 +52,7 @@ public class Config {
         this.config.addDefault("spawners_confirmed", 2.2);
         this.config.addDefault("logOreBreaks.diamond", true);
         this.config.addDefault("logOreBreaks.emerald", true);
+        this.config.addDefault("logOreBreaks.ancient_debris", true);
         this.config.addDefault("logOreBreaks.iron", false);
         this.config.addDefault("logOreBreaks.gold", false);
         this.config.addDefault("logOreBreaks.redstone", false);

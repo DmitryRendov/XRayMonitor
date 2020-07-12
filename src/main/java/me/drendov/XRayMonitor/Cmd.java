@@ -1,6 +1,6 @@
-package me.drendov.xraymonitor;
+package me.drendov.XRayMonitor;
 
-import me.drendov.xraymonitor.lookups.Checkers;
+import me.drendov.XRayMonitor.lookups.Checkers;
 
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -63,8 +63,9 @@ public class Cmd
                     for (String arg : nonPlayerArgs) {
                         if (arg == null) break;
                         String[] tokens = arg.split(":");
-                        hm.put(tokens[0], tokens[1]);
-                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + "  TK0=" + tokens[0] + "  TK1=" + tokens[1]);
+                        if (tokens.length == 2) {
+                            hm.put(tokens[0], tokens[1]);
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

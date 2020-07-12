@@ -1,4 +1,4 @@
-package me.drendov.xraymonitor;
+package me.drendov.XRayMonitor;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,8 +8,7 @@ import java.util.logging.Logger;
 
 import de.diddiz.LogBlock.LogBlock;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandExecutor;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -58,6 +57,12 @@ public class XRayMonitor extends JavaPlugin {
         pluginManager.registerEvents((Listener) new Listeners(), (Plugin) this);
         Objects.requireNonNull(this.getCommand("xrm")).setExecutor(new Cmd());
 
+        try
+        {
+            int pluginId = 8153;
+            Metrics metrics = new Metrics(this, pluginId);
+        }
+        catch (Throwable ignored){}
         PluginDescriptionFile pdfFile = this.getDescription();
         this.version = pdfFile.getVersion();
         logger.info("XRayMonitor v" + this.version + " enabled.");
@@ -169,6 +174,7 @@ public class XRayMonitor extends JavaPlugin {
 
         this.addDefault(defaults, Messages.Diamond, "Diamond: {0}", "0: number of diamond ore blocks.");
         this.addDefault(defaults, Messages.Emerald, "Emerald: {0}", "0: number of emerald ore blocks.");
+        this.addDefault(defaults, Messages.AncientDebris, "AncientDebris: {0} ({1})", "0: number of ancient debris blocks; 1:number of Netherrack destroyed");
         this.addDefault(defaults, Messages.Gold, "Gold: {0}", "0: number of gold ore blocks.");
         this.addDefault(defaults, Messages.Lapis, "Lapis: {0}", "0: number of lapis ore blocks.");
         this.addDefault(defaults, Messages.Iron, "Iron: {0}", "0: number of iron ore  blocks.");

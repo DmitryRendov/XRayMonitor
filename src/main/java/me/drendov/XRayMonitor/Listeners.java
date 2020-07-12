@@ -1,6 +1,6 @@
-package me.drendov.xraymonitor;
+package me.drendov.XRayMonitor;
 
-import me.drendov.xraymonitor.lookups.LogBlockLookup;
+import me.drendov.XRayMonitor.lookups.LogBlockLookup;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -11,9 +11,12 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.logging.Logger;
+
 public class Listeners
         implements Listener {
     private XRayMonitor plugin;
+    private static Logger logger;
 
     Listeners() {
         this.plugin = XRayMonitor.getInstance();
@@ -37,7 +40,12 @@ public class Listeners
                         }
                         int level = 0;
 
+                        int count_stones = 0;
                         int count_stone = 0;
+                        int count_andesite = 0;
+                        int count_diorite = 0;
+                        int count_granite = 0;
+
                         int diamond_count = 0;
                         int gold_count = 0;
                         int lapis_count = 0;
@@ -46,9 +54,15 @@ public class Listeners
                         int coal_count = 0;
                         int mossy_count = 0;
                         int emerald_count = 0;
+                        int ancient_debris_count = 0;
                         int spawner_count = 0;
+                        int count_netherrack = 0;
                         if (Listeners.this.plugin.getConfig().getString("logging_plugin").equalsIgnoreCase("logblock")) {
                             count_stone = Listeners.this.lb.oreLookup(playerName, "stone", world, hours);
+                            count_andesite = Listeners.this.lb.oreLookup(playerName, "andesite", world, hours);
+                            count_diorite = Listeners.this.lb.oreLookup(playerName, "diorite", world, hours);
+                            count_granite = Listeners.this.lb.oreLookup(playerName, "granite", world, hours);
+                            count_stones = count_stone + count_andesite + count_diorite + count_granite;
 
                             diamond_count = Listeners.this.lb.oreLookup(playerName, "diamond_ore", world, hours);
                             gold_count = Listeners.this.lb.oreLookup(playerName, "gold_ore", world, hours);
@@ -58,98 +72,112 @@ public class Listeners
                             coal_count = Listeners.this.lb.oreLookup(playerName, "coal_ore", world, hours);
                             mossy_count = Listeners.this.lb.oreLookup(playerName, "mossy_cobblestone", world, hours);
                             emerald_count = Listeners.this.lb.oreLookup(playerName, "emerald_ore", world, hours);
+                            ancient_debris_count = Listeners.this.lb.oreLookup(playerName, "ancient_debris", world, hours);
                             spawner_count = Listeners.this.lb.oreLookup(playerName, "spawner", world, hours);
+                            count_netherrack = Listeners.this.lb.oreLookup(playerName, "netherrack", world, hours);
 
                         }
                         String dia = "";
                         String gld = "";
                         String lap = "";
                         String emr = "";
+                        String adr = "";
                         String irn = "";
                         String rds = "";
                         String coa = "";
                         String msy = "";
                         String spn = "";
                         if ((Listeners.this.plugin.config.isActive("diamond")) && (diamond_count > 0)) {
-                            float d = (float) (diamond_count * 100.0D / count_stone);
+                            float d = (float) (diamond_count * 100.0D / count_stones);
                             if (d > Listeners.this.plugin.config.getRate("confirmed", "diamond")) {
                                 dia = "diamond, ";
                             }
                             level = (int) (level + d * 10.0F);
                         }
                         if ((Listeners.this.plugin.config.isActive("gold")) && (gold_count > 0)) {
-                            float d = (float) (gold_count * 100.0D / count_stone);
+                            float d = (float) (gold_count * 100.0D / count_stones);
                             if (d > Listeners.this.plugin.config.getRate("confirmed", "gold")) {
                                 gld = "gold, ";
                             }
                             level = (int) (level + d * 3.0F);
                         }
                         if ((Listeners.this.plugin.config.isActive("lapis")) && (lapis_count > 0)) {
-                            float d = (float) (lapis_count * 100.0D / count_stone);
+                            float d = (float) (lapis_count * 100.0D / count_stones);
                             if (d > Listeners.this.plugin.config.getRate("confirmed", "lapis")) {
                                 lap = "lapis, ";
                             }
                             level = (int) (level + d * 10.0F);
                         }
                         if ((Listeners.this.plugin.config.isActive("emerald")) && (emerald_count > 0)) {
-                            float d = (float) (emerald_count * 100.0D / count_stone);
+                            float d = (float) (emerald_count * 100.0D / count_stones);
                             if (d > Listeners.this.plugin.config.getRate("confirmed", "emerald")) {
                                 emr = "emerald, ";
                             }
-                            level = (int) (level + d * 10.0F);
+                            level = (int) (level + d * 15.0F);
+                        }
+                        if ((Listeners.this.plugin.config.isActive("ancient_debris")) && (emerald_count > 0)) {
+                            float d = (float) (ancient_debris_count * 100.0D / count_netherrack);
+                            if (d > Listeners.this.plugin.config.getRate("confirmed", "ancient_debris")) {
+                                adr = "ancient debris, ";
+                            }
+                            level = (int) (level + d * 15.0F);
                         }
                         if ((Listeners.this.plugin.config.isActive("iron")) && (iron_count > 0)) {
-                            float d = (float) (iron_count * 100.0D / count_stone);
+                            float d = (float) (iron_count * 100.0D / count_stones);
                             if (d > Listeners.this.plugin.config.getRate("confirmed", "iron")) {
                                 irn = "iron, ";
                             }
                             level = (int) (level + d * 1.0F);
                         }
                         if ((Listeners.this.plugin.config.isActive("redstone")) && (redstone_count > 0)) {
-                            float d = (float) (redstone_count * 100.0D / count_stone);
+                            float d = (float) (redstone_count * 100.0D / count_stones);
                             if (d > Listeners.this.plugin.config.getRate("confirmed", "redstone")) {
                                 rds = "redstone, ";
                             }
                             level = (int) (level + d * 1.0F);
                         }
                         if ((Listeners.this.plugin.config.isActive("coal")) && (coal_count > 0)) {
-                            float d = (float) (coal_count * 100.0D / count_stone);
+                            float d = (float) (coal_count * 100.0D / count_stones);
                             if (d > Listeners.this.plugin.config.getRate("confirmed", "coal")) {
                                 coa = "redstone, ";
                             }
                             level = (int) (level + d * 1.0F);
                         }
                         if ((Listeners.this.plugin.config.isActive("mossy")) && (mossy_count > 0)) {
-                            float d = (float) (mossy_count * 100.0D / count_stone);
+                            float d = (float) (mossy_count * 100.0D / count_stones);
                             if (d > Listeners.this.plugin.config.getRate("confirmed", "mossy")) {
                                 msy = "mossy, ";
                             }
                             level = (int) (level + d * 7.0F);
                         }
                         if ((Listeners.this.plugin.config.isActive("spawners")) && (spawner_count > 0)) {
-                            float d = (float) (spawner_count * 100.0D / count_stone);
+                            float d = (float) (spawner_count * 100.0D / count_stones);
                             if (d > Listeners.this.plugin.config.getRate("confirmed", "spawners")) {
                                 spn = "spawners, ";
                             }
                             level = (int) (level + d * 9.0F);
                         }
-                        if (count_stone < 500) {
+                        if (count_stones < 500) {
                             level = (int) (level * 0.5D);
-                        } else if (count_stone > 1000) {
+                        } else if (count_stones > 1000) {
                             level *= 2;
                         }
-                        if ((dia != "") || (gld != "") || (lap != "") || (emr != "") || (irn != "") || (coa != "") || (rds != "") || (msy != "") || (spn != "")) {
+                        if ((dia != "") || (gld != "") || (lap != "") || (emr != "") || (adr != "") || (irn != "") || (coa != "") || (rds != "") || (msy != "") || (spn != "")) {
                             for (Player staff : Listeners.this.plugin.getServer().getOnlinePlayers()) {
                                 if ((staff.hasPermission("xcheck.receive")) || (staff.isOp())) {
-                                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + Listeners.this.plugin.getConfig().getString("checkOnPlayerJoin.warningMessage").replace("%player%", playerName).replace("%ores%", new StringBuilder(String.valueOf(dia)).append(gld).append(lap).append(emr).append(irn).append(rds).append(coa).append(msy).append(spn).toString()));
-                                    Listeners.this.plugin.getLogger().info("Player " + Listeners.this.plugin.getConfig().getString("checkOnPlayerJoin.warningMessage").replace("%player%", playerName).replace("%ores%", new StringBuilder(String.valueOf(dia)).append(gld).append(lap).append(emr).append(irn).append(rds).append(coa).append(msy).append(spn).toString()));
+                                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + Listeners.this.plugin.getConfig().getString("checkOnPlayerJoin.warningMessage").replace("%player%", playerName).replace("%ores%", new StringBuilder(String.valueOf(dia)).append(gld).append(lap).append(emr).append(adr).append(irn).append(rds).append(coa).append(msy).append(spn).toString()));
+                                    Listeners.this.plugin.getLogger().info("Player " + Listeners.this.plugin.getConfig().getString("checkOnPlayerJoin.warningMessage").replace("%player%", playerName).replace("%ores%", new StringBuilder(String.valueOf(dia)).append(gld).append(lap).append(emr).append(adr).append(irn).append(rds).append(coa).append(msy).append(spn).toString()));
                                 }
                             }
                             if (!Listeners.this.plugin.config.getCmd("commandOnXrayerJoin").equals("none")) {
                                 String cmd = Listeners.this.plugin.config.getCmd("commandOnXrayerJoin").replaceAll("%player%", playerName);
-                                cmd = cmd.replaceAll("%ores%", dia + gld + lap + emr + irn + rds + coa + msy + spn);
+                                cmd = cmd.replaceAll("%ores%", dia + gld + lap + emr + adr + irn + rds + coa + msy + spn);
                                 cmd = cmd.replaceAll("%xlevel%", String.valueOf(level) );
                                 Listeners.this.plugin.getServer().dispatchCommand(Listeners.this.plugin.getServer().getConsoleSender(), cmd);
+                            }
+
+                            if (Listeners.this.plugin.config.isActive("notifyConsoleOnJoin")) {
+                                logger.severe("Player " + Listeners.this.plugin.getConfig().getString("checkOnPlayerJoin.warningMessage").replace("%player%", playerName).replace("%ores%", new StringBuilder(String.valueOf(dia)).append(gld).append(lap).append(emr).append(adr).append(irn).append(rds).append(coa).append(msy).append(spn).toString()));
                             }
                         }
                     } catch (Exception e) {
@@ -208,6 +236,13 @@ public class Listeners
             for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
                 if (staff.hasPermission("xcheck.receive")) {
                     staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined a emerald ore.");
+                }
+            }
+        }
+        if ((block == Material.ANCIENT_DEBRIS) && (this.plugin.getConfig().getBoolean("logOreBreaks.ancient_debris"))) {
+            for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
+                if (staff.hasPermission("xcheck.receive")) {
+                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined a ancient_debris ore.");
                 }
             }
         }

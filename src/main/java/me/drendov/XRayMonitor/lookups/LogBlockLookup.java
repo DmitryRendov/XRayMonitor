@@ -1,8 +1,8 @@
-package me.drendov.xraymonitor.lookups;
+package me.drendov.XRayMonitor.lookups;
 
-import me.drendov.xraymonitor.ClearedPlayerFile;
-import me.drendov.xraymonitor.Config;
-import me.drendov.xraymonitor.XRayMonitor;
+import me.drendov.XRayMonitor.ClearedPlayerFile;
+import me.drendov.XRayMonitor.Config;
+import me.drendov.XRayMonitor.XRayMonitor;
 import de.diddiz.LogBlock.BlockChange;
 import de.diddiz.LogBlock.LogBlock;
 import de.diddiz.LogBlock.QueryParams;

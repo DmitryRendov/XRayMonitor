@@ -1,4 +1,4 @@
-package me.drendov.xraymonitor;
+package me.drendov.XRayMonitor;
 
 public class CustomizableMessage 
 {

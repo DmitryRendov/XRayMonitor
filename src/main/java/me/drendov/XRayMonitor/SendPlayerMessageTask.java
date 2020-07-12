@@ -1,4 +1,4 @@
-package me.drendov.xraymonitor;
+package me.drendov.XRayMonitor;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

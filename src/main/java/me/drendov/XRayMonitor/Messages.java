@@ -1,4 +1,4 @@
-package me.drendov.xraymonitor;
+package me.drendov.XRayMonitor;
 
 public enum Messages
 {
@@ -13,6 +13,7 @@ public enum Messages
     Stones,
     Diamond,
     Emerald,
+    AncientDebris,
     Gold,
     Lapis,
     Iron,

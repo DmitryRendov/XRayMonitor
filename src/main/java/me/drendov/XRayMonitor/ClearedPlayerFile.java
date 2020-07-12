@@ -1,4 +1,4 @@
-package me.drendov.xraymonitor;
+package me.drendov.XRayMonitor;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,7 +73,7 @@ public class ClearedPlayerFile {
     }
 
     static {
-        clearedPlayers = new File("plugins/xraymonitor/" + File.separator + "ClearedPlayers.yml");
+        clearedPlayers = new File("plugins/XRayMonitor/" + File.separator + "ClearedPlayers.yml");
         cpinfo = YamlConfiguration.loadConfiguration(clearedPlayers);
         cpList = new ArrayList<String>();
     }
