@@ -4,7 +4,7 @@
 
     <groupId>me.drendov.xRayMonitor</groupId>
     <artifactId>XRayMonitor</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
     <packaging>jar</packaging>
     <name>XRayMonitor</name>
     <description>Let's fight X-Ray cheat with simple Math!</description>

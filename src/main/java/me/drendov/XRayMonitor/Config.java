@@ -1,68 +1,97 @@
 package me.drendov.XRayMonitor;
 
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.Material;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
+
 
 public class Config {
-    private XRayMonitor plugin;
+    private static final XRayMonitor instance = XRayMonitor.getInstance();
+    //for logging to the console
+    private static Logger logger;
     private FileConfiguration config;
-    public static String defaultWorld;
 
-    Config(XRayMonitor plugin) {
-        this.plugin = plugin;
-    }
+
+    // configured worlds
+    public String[] worlds;
+
+    public String defaultWorld = "world";
+
+    // log driver
+    public String logEngine;
+
+    // Notify Console when a player break watched ores or potential cheater log in
+    public Boolean notifyConsole;
+
+    // Notify Staff team when a player break watched ores or potential cheater log in
+    public Boolean notifyStaff;
+
+    // Stone-like blocks
+    public ConcurrentHashMap<World, ArrayList<Material>> stoneBlocks;
+
+    // Ore list to watch and notify
+    public ArrayList<Material> notifyOnOreBreaks;
+
+    // Ore list and rates per world
+    WorldOreRatesManager worldSettingsManager = new WorldOreRatesManager();
 
     void load() {
-        this.plugin.reloadConfig();
-        this.config = this.plugin.getConfig();
-        this.config.addDefault("logging_plugin", "logblock");
-        this.config.addDefault("default_world", "world");
-        this.config.addDefault("checkOnPlayerJoin", true);
-        this.config.addDefault("checkOnPlayerJoin.warningMessage", "%player% has higher than average stats for %ores% and may be a cheater. Watch carefully.");
-        this.config.addDefault("commandOnXrayerJoin", "none");
-        this.config.addDefault("notifyConsoleOnJoin", "true");
-        this.config.addDefault("diamond", true);
-        this.config.addDefault("gold", true);
-        this.config.addDefault("lapis", true);
-        this.config.addDefault("iron", true);
-        this.config.addDefault("redstone", true);
-        this.config.addDefault("coal", true);
-        this.config.addDefault("mossy", true);
-        this.config.addDefault("emerald", true);
-        this.config.addDefault("ancient_debris", true);
-        this.config.addDefault("spawners", true);
-        this.config.addDefault("diamond_warn", 3.2);
-        this.config.addDefault("diamond_confirmed", 3.8);
-        this.config.addDefault("gold_warn", 8.0);
-        this.config.addDefault("gold_confirmed", 10.0);
-        this.config.addDefault("emerald_warn", 0.3);
-        this.config.addDefault("emerald_confirmed", 0.5);
-        this.config.addDefault("ancient_debris_warn", 0.3);
-        this.config.addDefault("ancient_debris_confirmed", 0.5);
-        this.config.addDefault("lapis_warn", 3.2);
-        this.config.addDefault("lapis_confirmed", 3.8);
-        this.config.addDefault("iron_warn", 40.0);
-        this.config.addDefault("iron_confirmed", 100.0);
-        this.config.addDefault("redstone_warn", 25.0);
-        this.config.addDefault("redstone_confirmed", 65.0);
-        this.config.addDefault("coal_warn", 50.0);
-        this.config.addDefault("coal_confirmed", 100.0);
-        this.config.addDefault("mossy_warn", 35.0);
-        this.config.addDefault("mossy_confirmed", 90.0);
-        this.config.addDefault("spawners_warn", 1.6);
-        this.config.addDefault("spawners_confirmed", 2.2);
-        this.config.addDefault("logOreBreaks.diamond", true);
-        this.config.addDefault("logOreBreaks.emerald", true);
-        this.config.addDefault("logOreBreaks.ancient_debris", true);
-        this.config.addDefault("logOreBreaks.iron", false);
-        this.config.addDefault("logOreBreaks.gold", false);
-        this.config.addDefault("logOreBreaks.redstone", false);
-        this.config.addDefault("logOreBreaks.coal", false);
-        this.config.addDefault("logOreBreaks.lapis", false);
-        this.config.addDefault("logOreBreaks.mossy", false);
-        this.config.addDefault("logOreBreaks.spawners", false);
-        this.config.options().copyDefaults(true);
-        this.plugin.saveConfig();
-        defaultWorld = this.config.getString("default_world");
+
+        this.worldSettingsManager = new WorldOreRatesManager();
+        //load the config if it exists
+        FileConfiguration config = YamlConfiguration.loadConfiguration(new File(XRayMonitor.configFilePath));
+        FileConfiguration outConfig = new YamlConfiguration();
+        // outConfig.options().header("Default values fit most servers. If you want to customize them -- have a look at our wiki: https://github.com/DmitryRendov/XRayMonitor/wiki/");
+
+        // Driver to log blocks history
+        this.logEngine = config.getString("XRayMonitor.LogEngine", "logblock");
+
+        // Notify Console when a player break watched ores or potential cheater log in
+        this.notifyConsole = config.getBoolean("XRayMonitor.NotifyConsole", false);
+
+        outConfig.set("XRayMonitor.LogEngine", this.logEngine);
+        outConfig.set("XRayMonitor.NotifyConsole", this.notifyConsole);
+
+
+        List<World> worlds = this.instance.getServer().getWorlds();
+        ArrayList<String> worldSettingsKeys = new ArrayList<String>();
+        for (World world : worlds) {
+            worldSettingsKeys.add(world.getName());
+        }
+        worldSettingsKeys.add(this.worldSettingsManager.worldName);
+
+        for (String worldName : worldSettingsKeys) {
+            WorldOreRates settings = this.worldSettingsManager.Create(worldName);
+
+            // ArrayList<Material> stoneBlocks;
+            //ConcurrentHashMap<Material, ArrayList<Object>> oreRates;
+
+            settings.oreRates.put(Material.DIAMOND_ORE, new OreRate(config.getDouble("DIAMOND_ORE.warn", 0.0),
+                    config.getDouble("DIAMOND_ORE.confirmed", 0.0),
+                    config.getInt("DIAMOND_ORE.weight", 0)))
+
+            outConfig.set("DIAMOND_ORE.warn", settings.oreRates.get(Material.DIAMOND_ORE));
+
+
+        }
+
+
+        try {
+            outConfig.save(XRayMonitor.configFilePath);
+            logger.info("Finished loading configuration.");
+        } catch (IOException exception) {
+            logger.info("Unable to write to the configuration file at \"" + XRayMonitor.configFilePath + "\"");
+        }
+
+        logger.info("Finished loading data.");
     }
 
     public boolean isActive(String ore) {
@@ -79,8 +108,7 @@ public class Config {
 
     void setLogger(String logger) {
         this.config.set("logging_plugin", logger.toLowerCase());
-        this.plugin.getLogger().info(String.valueOf(logger) + " detected and in use.");
-        this.plugin.saveConfig();
+        instance.getLogger().info(String.valueOf(logger) + " detected and in use.");
     }
 }
 

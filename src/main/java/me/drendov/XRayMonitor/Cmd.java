@@ -14,15 +14,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class Cmd
         implements CommandExecutor {
-    private static XRayMonitor plugin = XRayMonitor.getInstance();
+    private static XRayMonitor instance = XRayMonitor.getInstance();
     private Checkers checker = new Checkers();
-    private static Logger logger = plugin.getLogger();
+    private static Logger logger = instance.getLogger();
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
         Player player = XRayMonitor.isSenderPlayer(sender);
 
-        // xrm
         if (cmd.getName().equalsIgnoreCase("xrm")) {
             if (sender.hasPermission("xrm.check") || sender.isOp()) {
                 String playerName = "";
@@ -31,7 +30,7 @@ public class Cmd
                         playerName = args[0];
                     }
                 } else {
-                    plugin.showInfo(sender);
+                    instance.showInfo(sender);
                     return true;
                 }
                 String world = "";
@@ -70,7 +69,7 @@ public class Cmd
                 if (hm.containsKey("rate")) {
                     rate = Float.parseFloat(hm.get("rate"));
                     logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " rate=" + rate);
-                    if ( rate <= 0 ) {
+                    if (rate <= 0) {
                         XRayMonitor.sendMessage(player, TextMode.Err, Messages.ErrRatePositive);
                         return true;
                     }
@@ -82,28 +81,25 @@ public class Cmd
                 if (hm.containsKey("world")) {
                     world = hm.get("world");
                     logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " world=" + world);
-                    if (world != null && !plugin.isWorldExist(world)) {
+                    if (world != null && !instance.isWorldExist(world)) {
                         XRayMonitor.sendMessage(player, TextMode.Err, Messages.WorldNotFound);
                         return true;
                     }
                 }
-                if (hm.containsKey("ore")) {
-                    oreName = hm.get("ore");
-                    logger.info("DEBUG: oreName=" + oreName);
-                }
+                if (hm.containsKey("ore")) oreName = hm.get("ore");
                 if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-                    plugin.config.load();
+                    instance.config.load();
                     XRayMonitor.sendMessage(player, TextMode.Success, Messages.Reloaded);
                     return true;
                 }
                 if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
-                    plugin.showHelp(sender);
+                    instance.showHelp(sender);
                     return true;
                 }
                 if (args.length == 2 && args[0].equalsIgnoreCase("clear")) {
                     if (sender.hasPermission("xrm.clear") || sender.isOp()) {
                         try {
-                            plugin.clearPlayer(sender, args[1]);
+                            instance.clearPlayer(sender, args[1]);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -113,7 +109,7 @@ public class Cmd
                     return true;
                 }
                 if (playerName.length() == 0) {
-                    plugin.showInfo(sender);
+                    instance.showInfo(sender);
                     return true;
                 }
                 if (world.length() == 0 && oreName.isEmpty()) {
@@ -122,8 +118,8 @@ public class Cmd
                             hours = ClearedPlayerFile.getHoursFromClear(playerName);
                             logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " hours for cleared playerName=" + hours);
                         }
-                        world = Config.defaultWorld;
-                        if (world != null && !plugin.isWorldExist(world)) {
+                        world = instance.config.defaultWorld;
+                        if (world != null && !instance.isWorldExist(world)) {
                             XRayMonitor.sendMessage(player, TextMode.Err, Messages.DefaultWorldNotFound);
                             return true;
                         }
@@ -137,7 +133,7 @@ public class Cmd
                 }
                 if (world.length() > 0 && oreName.isEmpty()) {
                     try {
-                        if (!plugin.isWorldExist(world)) {
+                        if (!instance.isWorldExist(world)) {
                             XRayMonitor.sendMessage(player, TextMode.Err, Messages.WorldNotFound);
                             return true;
                         }
@@ -172,8 +168,8 @@ public class Cmd
                     return true;
                 }
                 if (world.length() == 0 && !oreName.isEmpty()) {
-                    world = Config.defaultWorld;
-                    if (world != null && !plugin.isWorldExist(world)) {
+                    world = instance.config.defaultWorld;
+                    if (world != null && !instance.isWorldExist(world)) {
                         XRayMonitor.sendMessage(player, TextMode.Err, Messages.DefaultWorldNotFound);
                         return true;
                     }
@@ -187,7 +183,7 @@ public class Cmd
                             public void run() {
                                 Cmd.this.checker.checkAllOnlinePlayers(s, w, on, mr, h);
                             }
-                        }.runTaskAsynchronously(plugin);
+                        }.runTaskAsynchronously(instance);
                         return true;
                     }
                     if (ClearedPlayerFile.wasPlayerCleared(playerName)) {

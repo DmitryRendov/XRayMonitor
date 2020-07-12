@@ -24,11 +24,11 @@ public class XRayMonitor extends JavaPlugin {
     //for logging to the console
     private static Logger logger;
 
-    public final Config config = new Config(this);
-    protected final static String pluginFolderPath = "plugins" + File.separator + "XRayMonitor";
-    final static String configFilePath = pluginFolderPath + File.separator + "config.yml";
-    final static String messagesFilePath = pluginFolderPath + File.separator + "messages.yml";
+    public final Config config = new Config();
+    private final static String pluginFolderPath = "plugins" + File.separator + "XRayMonitor";
     final static String clearedPlayerFilePath = pluginFolderPath + File.separator + "ClearedPlayers.yml";
+    final static String configFilePath = pluginFolderPath + File.separator + "config-new.yml";
+    private final static String messagesFilePath = pluginFolderPath + File.separator + "messages.yml";
 
     private String version;
     private String[] messages;
@@ -38,6 +38,9 @@ public class XRayMonitor extends JavaPlugin {
     public void onEnable() {
         instance = this;
         logger = instance.getLogger();
+
+        // Check only supported versions
+        this.checkVersion();
 
         // load up all the messages from messages.yml
         this.loadMessages();
@@ -83,6 +86,16 @@ public class XRayMonitor extends JavaPlugin {
             this.getServer().getPluginManager().disablePlugin(this);
         }
         this.config.setLogger("LogBlock");
+    }
+
+    private void checkVersion() {
+        int ver = Integer.valueOf(this.getServer().getClass().getPackage().getName().split("\\.")[3].split("_")[1]);
+
+        // Check if server is running MC 1.13+ (API Changes)
+        if (ver < 13) {
+            logger.info(ChatColor.RED + "Only 1.13+ versions are supported. Disabling...");
+            this.getServer().getPluginManager().disablePlugin(this);
+        }
     }
 
     public boolean isWorldExist(String world) {
@@ -168,6 +181,7 @@ public class XRayMonitor extends JavaPlugin {
         this.addDefault(defaults, Messages.NoPermissionForCommand, "You don't have permission to do that.", null);
         this.addDefault(defaults, Messages.WorldNotFound, "World not found.", null);
         this.addDefault(defaults, Messages.DefaultWorldNotFound, "Default world does not exist. Please check your configuration file.", null);
+        this.addDefault(defaults, Messages.TheWorldNotFound, "{0} world does not exist. Please check your configuration file.", "0: a world name");
         this.addDefault(defaults, Messages.CalcPlayerOre, "Calculating ore ratios for {0}.", "0: a player");
         this.addDefault(defaults, Messages.AllPlayersOnOre, "All players on {0}.", "0: ore name");
         this.addDefault(defaults, Messages.CalcAllPlayersOreRate, "Searching for players with a {0} rate higher than {1}.", "0: ore name; 1: max rate in percent");

@@ -6,6 +6,7 @@ public enum Messages
     NoPermissionForCommand,
     WorldNotFound,
     DefaultWorldNotFound,
+    TheWorldNotFound,
     CalcPlayerOre,
     AllPlayersOnOre,
     CalcAllPlayersOreRate,

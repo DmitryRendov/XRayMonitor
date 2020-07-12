@@ -1,0 +1,79 @@
+XRayMonitor:
+  LogEngine: logblock
+  NotifyOnOreBreaks:
+    DIAMOND_ORE: true
+    EMERALD_ORE: true
+    ANCIENT_DEBRIS: true
+    GOLD_ORE: false
+    NETHER_GOLD_ORE: false
+    GILDED_BLACKSTONE: false
+    IRON_ORE: false
+    LAPIS_ORE: false
+    QUARTZ_ORE: false
+    REDSTONE_ORE: false
+    MOSSY_COBBLESTONE: false
+    SPAWNER: true
+  NotifyStaffOnline: true
+  NotifyConsole: false
+  Worlds:
+    survival: 
+      DIAMOND_ORE:
+        warn: 3.2
+        confirmed: 3.8
+        weight: 20
+      EMERALD_ORE:
+        warn: 0.7
+        confirmed: 1.2
+        weight: 25
+      GOLD_ORE:
+        warn: 8.0
+        confirmed: 10.0
+        weight: 10
+      IRON_ORE:
+        warn: 40.0
+        confirmed: 70.0
+        weight: 5
+      LAPIS_ORE:
+        warn: 3.2
+        confirmed: 3.8
+        weight: 10
+      COAL_ORE:
+        warn: 50.0
+        confirmed: 90.0
+        weight: 1
+      REDSTONE_ORE:
+        warn: 25.0
+        confirmed: 50.0
+        weight: 5
+      SPAWNER:
+        warn: 1.5
+        confirmed: 3.0
+        weight: 15
+      StoneBlocks:
+        - STONE
+        - DIORITE
+        - ANDESITE
+        - GRANITE
+    survival_nether: 
+      QUARTZ_ORE:
+        warn: 50.0
+        confirmed: 80.0
+        weight: 1
+      NETHER_GOLD_ORE:
+        warn: 8.0
+        confirmed: 10.0
+        weight: 10
+      GILDED_BLACKSTONE:
+        warn: 5.0
+        confirmed: 8.0
+        weight: 5      
+      ANCIENT_DEBRIS:
+        warn: 1.0
+        confirmed: 2.0
+        weight: 25
+      StoneBlocks:
+        - NETHERRACK
+        - BASALT
+        - BLACKSTONE
+    survival_the_end: Disabled
+

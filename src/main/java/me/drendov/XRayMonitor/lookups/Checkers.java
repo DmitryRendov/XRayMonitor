@@ -92,13 +92,13 @@ public class Checkers {
                         s = d + "000000000";
                         XRayMonitor.sendMessage(player, ccolor, Messages.Diamond, Float.parseFloat(s.substring(0, s.lastIndexOf('.') + 3)) + "% (" + diamond_count + ")");
                     } else {
-                        XRayMonitor.sendMessage(player, ChatColor.GRAYz, Messages.Diamond, "-");
+                        XRayMonitor.sendMessage(player, ChatColor.GRAY, Messages.Diamond, "-");
                     }
-                    if ((Checkers.plugin.config.isActive("emerald")) && (emerald_count > 0)) {
+                    if ((Checkers.instance.config.isActive("emerald")) && (emerald_count > 0)) {
                         float d = (float) (emerald_count * 100.0D / stones);
-                        if (d > Checkers.plugin.config.getRate("confirmed", "emerald")) {
+                        if (d > Checkers.instance.config.getRate("confirmed", "emerald")) {
                             ccolor = TextMode.Err;
-                        } else if (d > Checkers.plugin.config.getRate("warn", "emerald")) {
+                        } else if (d > Checkers.instance.config.getRate("warn", "emerald")) {
                             ccolor = TextMode.Instr;
                         } else {
                             ccolor = TextMode.Success;
@@ -112,11 +112,11 @@ public class Checkers {
                         XRayMonitor.sendMessage(player, ChatColor.WHITE, Messages.Emerald, "-");
                     }
 
-                    if ((Checkers.plugin.config.isActive("ancient_debris")) && (ancient_debris_count > 0)) {
+                    if ((Checkers.instance.config.isActive("ancient_debris")) && (ancient_debris_count > 0)) {
                         float d = (float) (ancient_debris_count * 100.0D / netherrack_count);
-                        if (d > Checkers.plugin.config.getRate("confirmed", "ancient_debris")) {
+                        if (d > Checkers.instance.config.getRate("confirmed", "ancient_debris")) {
                             ccolor = TextMode.Err;
-                        } else if (d > Checkers.plugin.config.getRate("warn", "ancient_debris")) {
+                        } else if (d > Checkers.instance.config.getRate("warn", "ancient_debris")) {
                             ccolor = TextMode.Instr;
                         } else {
                             ccolor = TextMode.Success;
