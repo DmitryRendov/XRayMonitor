@@ -15,7 +15,7 @@ class OreRate {
     public Double confirmed;
     public Integer weight;
 
-    OreRate(Double warn, Double confirmed, Integer wieght){
+    OreRate(Double warn, Double confirmed, Integer weight){
         this.warn = warn;
         this.confirmed = confirmed;
         this.weight = weight;

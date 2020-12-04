@@ -19,7 +19,6 @@ public class Config {
     private static Logger logger;
     private FileConfiguration config;
 
-
     // configured worlds
     public String[] worlds;
 
@@ -74,13 +73,11 @@ public class Config {
             // ArrayList<Material> stoneBlocks;
             //ConcurrentHashMap<Material, ArrayList<Object>> oreRates;
 
-            settings.oreRates.put(Material.DIAMOND_ORE, new OreRate(config.getDouble("DIAMOND_ORE.warn", 0.0),
-                    config.getDouble("DIAMOND_ORE.confirmed", 0.0),
-                    config.getInt("DIAMOND_ORE.weight", 0)))
+            settings.oreRates.put(Material.DIAMOND_ORE, new OreRate(config.getDouble(worldName + "DIAMOND_ORE.warn", 0.0),
+                    config.getDouble(worldName + "DIAMOND_ORE.confirmed", 0.0),
+                    config.getInt(worldName + "DIAMOND_ORE.weight", 0)));
 
-            outConfig.set("DIAMOND_ORE.warn", settings.oreRates.get(Material.DIAMOND_ORE));
-
-
+            outConfig.set(worldName + "DIAMOND_ORE.warn", settings.oreRates.get(Material.DIAMOND_ORE));
         }
 
 
