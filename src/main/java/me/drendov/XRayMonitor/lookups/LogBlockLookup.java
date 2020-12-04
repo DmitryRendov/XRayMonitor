@@ -29,9 +29,9 @@ public class LogBlockLookup {
         if (mat == null) {
             throw new IllegalArgumentException("No material matching: '" + oreName + "'");
         }
-        ArrayList<Integer> lookupListIds = new ArrayList<>();
-        lookupListIds.add(MaterialConverter.getOrAddMaterialId(mat.getKey()));
-        params.typeIds = lookupListIds;
+        ArrayList<Material> lookupListTypes = new ArrayList<>();
+        lookupListTypes.add(mat);
+        params.types = lookupListTypes;
 
         params.needCount = true;
         int count = logBlock.getCount(params);
@@ -49,9 +49,9 @@ public class LogBlockLookup {
         if (mat == null) {
             throw new IllegalArgumentException("No material matching: '" + oreName + "'");
         }
-        ArrayList<Integer> lookupListIds = new ArrayList<>();
-        lookupListIds.add(MaterialConverter.getOrAddMaterialId(mat.getKey()));
-        params.typeIds = lookupListIds;
+        ArrayList<Material> lookupListTypes = new ArrayList<>();
+        lookupListTypes.add(mat);
+        params.types = lookupListTypes;
 
         params.needPlayer = true;
         params.sum = QueryParams.SummarizationMode.PLAYERS;
