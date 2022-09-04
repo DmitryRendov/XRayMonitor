@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Create a report to help us improve
+about: Create a report to help us improve XRayMonitor
 
 ---
 
@@ -24,10 +24,10 @@ about: Create a report to help us improve
 --->
 
 ### Server Information
-* **Server version/platform:** git-Paper-168   <!-- /ver -->
-* **XRayMonitor Version:** 0.1.0       <!-- /xcheck version -->
-* **LogBlock Version:** LogBlock v1.15.1.1-SNAPSHOT (build #437) <!-- /lb -->
-* **Other plugins:** IllegalStack, LogBlock, LuckPerms, ProtocolLib, WorldEdit  <!-- /plugins -->
+* **Server version/platform:**  <!-- /ver -->
+* **XRayMonitor Version:**      <!-- /xcheck version -->
+* **LogBlock Version:**         <!-- /lb -->
+* **Other plugins(if any):**    <!-- /plugins -->
 
 ### Additional Info
 <!--- Add any other information about the problem here --->

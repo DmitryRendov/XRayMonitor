@@ -1,0 +1,37 @@
+package me.drendov.XRayMonitor;
+
+public enum Messages
+{
+    Reloaded,
+    NoPermissionForCommand,
+    WorldNotFound,
+    DefaultWorldNotFound,
+    CalcPlayerOre,
+    AllPlayersOnOre,
+    CalcAllPlayersOreRate,
+    PleaseBePatient,
+    Stones,
+    Diamond,
+    Emerald,
+    AncientDebris,
+    Gold,
+    Lapis,
+    Iron,
+    Redstone,
+    Coal,
+    Mossy,
+    Spawners,
+    VeryLowChanceXRay,
+    LowChanceXRay,
+    MediumChanceXRay,
+    HighChanceXRay,
+    VeryHighChanceXRay,
+    PotentialXrayerWarning,
+    ErrRatePositive,
+    HelperOne,
+    HelperTwo,
+    HelperThree,
+    HelperFour,
+    HelperFive,
+    HelperTitle
+}

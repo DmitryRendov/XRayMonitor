@@ -1,0 +1,27 @@
+name: XRayMonitor
+version: ${project.version}
+description: This plugin helps you to protect your server from x-ray cheaters.
+website: https://github.com/DmitryRendov/XRayMonitor
+author: DmitryRendov
+main: me.drendov.XRayMonitor.XRayMonitor
+softdepend: [LogBlock]
+api-version: 1.13
+
+commands:
+  xrm:
+    description: Check for a given player, enter /xcheck reload to reload the config
+    usage: |
+      /xrm <player>
+      /xrm Player world:survival
+      /xrm all ore:diamond_ore rate:3
+
+permissions:
+  xrm.check:
+    description: Allows the XRayMonitor to check players
+    default: false
+  xrm.receive:
+    description: These members will receive messages when a potential cheater joins the game, and when ores are broken
+    default: false
+  xrm.bypasscheck:
+    description: These members will be skipped on login check
+    default: false
