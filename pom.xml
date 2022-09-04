@@ -4,15 +4,15 @@
 
     <groupId>me.drendov.xRayMonitor</groupId>
     <artifactId>XRayMonitor</artifactId>
-    <version>0.4.0</version>
+    <version>0.4.2</version>
     <packaging>jar</packaging>
     <name>XRayMonitor</name>
     <description>Let's fight X-Ray cheat with simple Math!</description>
     <url>https://github.com/DmitryRendov/XRayMonitor</url>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -20,13 +20,13 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.16.4-R0.1-SNAPSHOT</version>
+            <version>1.19-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>de.diddiz</groupId>
             <artifactId>logblock</artifactId>
-            <version>1.16.1.0</version>
+            <version>1.19.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <!-- bStats -->
@@ -49,12 +49,20 @@
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
         <repository>
+            <id>iani</id>
+            <url>https://www.iani.de/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
             <id>CodeMC</id>
             <url>https://repo.codemc.org/repository/maven-public</url>
         </repository>
         <repository>
-            <id>md_5-repo</id>
-            <url>https://repo.md-5.net/content/repositories/public/</url>
+            <id>bukkit-repo</id>
+            <url>http://repo.md-5.net/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>spigot-repo-new</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
     </repositories>
 
@@ -85,7 +93,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.3.0</version>
                 <configuration>
                     <relocations>
                         <relocation>
