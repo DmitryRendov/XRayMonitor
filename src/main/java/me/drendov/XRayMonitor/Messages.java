@@ -17,6 +17,7 @@ public enum Messages
     Gold,
     Lapis,
     Iron,
+    Copper,
     Redstone,
     Coal,
     Mossy,

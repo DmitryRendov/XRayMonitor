@@ -1,4 +1,4 @@
-default_world: survival
+default_world: world
 checkOnPlayerJoin:
   warningMessage: '%player% has higher than average stats for %ores% and may be a
     cheater. Watch carefully.'
@@ -18,12 +18,14 @@ diamond_warn: 3.2
 diamond_confirmed: 3.8
 gold_warn: 8.0
 gold_confirmed: 10.0
-emerald_warn: 0.3
-emerald_confirmed: 0.5
+emerald_warn: 1.0
+emerald_confirmed: 1.5
 ancient_debris_warn: 0.3
 ancient_debris_confirmed: 0.5
 lapis_warn: 3.2
 lapis_confirmed: 3.8
+copper_warn: 50.0
+copper_confirmed: 100.0
 iron_warn: 40.0
 iron_confirmed: 100.0
 redstone_warn: 25.0
@@ -38,6 +40,7 @@ logOreBreaks:
   diamond: true
   emerald: true
   ancient_debris: true
+  copper: false
   iron: false
   gold: false
   redstone: false

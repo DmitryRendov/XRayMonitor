@@ -24,6 +24,7 @@ public class Config {
         this.config.addDefault("gold", true);
         this.config.addDefault("lapis", true);
         this.config.addDefault("iron", true);
+        this.config.addDefault("copper", true);
         this.config.addDefault("redstone", true);
         this.config.addDefault("coal", true);
         this.config.addDefault("mossy", true);
@@ -40,6 +41,8 @@ public class Config {
         this.config.addDefault("ancient_debris_confirmed", 0.5);
         this.config.addDefault("lapis_warn", 3.2);
         this.config.addDefault("lapis_confirmed", 3.8);
+        this.config.addDefault("copper_warn", 50.0);
+        this.config.addDefault("copper_confirmed", 100.0);
         this.config.addDefault("iron_warn", 40.0);
         this.config.addDefault("iron_confirmed", 100.0);
         this.config.addDefault("redstone_warn", 25.0);
@@ -54,6 +57,7 @@ public class Config {
         this.config.addDefault("logOreBreaks.emerald", true);
         this.config.addDefault("logOreBreaks.ancient_debris", true);
         this.config.addDefault("logOreBreaks.iron", false);
+        this.config.addDefault("logOreBreaks.copper", false);
         this.config.addDefault("logOreBreaks.gold", false);
         this.config.addDefault("logOreBreaks.redstone", false);
         this.config.addDefault("logOreBreaks.coal", false);
