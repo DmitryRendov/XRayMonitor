@@ -96,11 +96,11 @@ public class XRayMonitor extends JavaPlugin {
             player = (Player) sender;
         }
         XRayMonitor.sendMessage(player, TextMode.Instr, ChatColor.WHITE + "----- " + ChatColor.GREEN + "XRayMonitor v" + this.version + ChatColor.WHITE + " -----");
-        XRayMonitor.sendMessage(player, TextMode.Instr, "/xrm <PlayerName>" + ChatColor.WHITE + " - " + Messages.HelperOne);
-        XRayMonitor.sendMessage(player, TextMode.Instr, "/xrm all" + ChatColor.WHITE + " - " + Messages.HelperTwo);
-        XRayMonitor.sendMessage(player, TextMode.Instr, "/xrm clear <PlayerName>" + ChatColor.WHITE + " - " + Messages.HelperThree);
-        XRayMonitor.sendMessage(player, TextMode.Instr, "/xrm reload" + ChatColor.WHITE + " - " + Messages.HelperFour);
-        XRayMonitor.sendMessage(player, TextMode.Instr, "/xrm help" + ChatColor.WHITE + " - " + Messages.HelperFive);
+        XRayMonitor.sendMessage(player, TextMode.Instr, "/xrm <PlayerName>" + ChatColor.WHITE + " - Calculate a player's x-ray stats.");
+        XRayMonitor.sendMessage(player, TextMode.Instr, "/xrm all" + ChatColor.WHITE + " - Calculate all online players' x-ray stats.");
+        XRayMonitor.sendMessage(player, TextMode.Instr, "/xrm clear <PlayerName>" + ChatColor.WHITE + " - Clears a player's x-ray stats.");
+        XRayMonitor.sendMessage(player, TextMode.Instr, "/xrm reload" + ChatColor.WHITE + " - Reloads the config.");
+        XRayMonitor.sendMessage(player, TextMode.Instr, "/xrm help" + ChatColor.WHITE + " - Displays more detailed command usage.");
     }
 
     void showHelp(CommandSender sender) {
@@ -108,7 +108,7 @@ public class XRayMonitor extends JavaPlugin {
         if (sender instanceof Player) {
             player = (Player) sender;
         }
-        XRayMonitor.sendMessage(player, TextMode.Instr, "----- " + ChatColor.GREEN + Messages.HelperTitle + ChatColor.WHITE + " -----");
+        XRayMonitor.sendMessage(player, TextMode.Instr, "----- " + ChatColor.GREEN + "XRayMonitor commands:" + ChatColor.WHITE + " -----");
         XRayMonitor.sendMessage(player, TextMode.Instr, "/xrm " + ChatColor.WHITE + "<player> " + ChatColor.RED + " [required]");
         XRayMonitor.sendMessage(player, TextMode.Instr, "/xrm " + ChatColor.WHITE + "world:<world name> " + ChatColor.GREEN + " [optional]");
         XRayMonitor.sendMessage(player, TextMode.Instr, "/xrm " + ChatColor.WHITE + "ore:<ore name> " + ChatColor.GREEN + " [optional, required on /xrm all]");
@@ -174,10 +174,11 @@ public class XRayMonitor extends JavaPlugin {
 
         this.addDefault(defaults, Messages.Diamond, "Diamond: {0}", "0: number of diamond ore blocks.");
         this.addDefault(defaults, Messages.Emerald, "Emerald: {0}", "0: number of emerald ore blocks.");
-        this.addDefault(defaults, Messages.AncientDebris, "AncientDebris: {0} ({1})", "0: number of ancient debris blocks; 1:number of Netherrack destroyed");
+        this.addDefault(defaults, Messages.AncientDebris, "AncientDebris: {0} ({1})", "0: number of ancient debris blocks; 1:number of Netherrack+Basalt destroyed");
         this.addDefault(defaults, Messages.Gold, "Gold: {0}", "0: number of gold ore blocks.");
         this.addDefault(defaults, Messages.Lapis, "Lapis: {0}", "0: number of lapis ore blocks.");
-        this.addDefault(defaults, Messages.Iron, "Iron: {0}", "0: number of iron ore  blocks.");
+        this.addDefault(defaults, Messages.Copper, "Copper: {0}", "0: number of copper ore blocks.");
+        this.addDefault(defaults, Messages.Iron, "Iron: {0}", "0: number of iron ore blocks.");
         this.addDefault(defaults, Messages.Redstone, "Redstone: {0}", "0: number of redstone ore blocks.");
         this.addDefault(defaults, Messages.Coal, "Coal: {0}", "0: number of coal ore blocks.");
         this.addDefault(defaults, Messages.Mossy, "Mossy: {0}", "0: number of mossy blocks.");

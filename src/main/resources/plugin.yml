@@ -1,4 +1,4 @@
-name: XRayMonitor
+name: ${project.name}
 version: ${project.version}
 description: This plugin helps you to protect your server from x-ray cheaters.
 website: https://github.com/DmitryRendov/XRayMonitor
