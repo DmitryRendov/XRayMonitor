@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 env:
-  MAVEN_OPTS: "-Dmaven.repo.local=$HOME/.m2/repository -Xmx1024m -XX:MaxPermSize=512m"
+  MAVEN_OPTS: "-Dmaven.repo.local=$HOME/.m2/repository -Xmx1024m"
 
 jobs:
   test:
