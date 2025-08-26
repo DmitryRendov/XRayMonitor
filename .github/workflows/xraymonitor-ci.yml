@@ -1,0 +1,142 @@
+name: XRayMonitor CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  MAVEN_OPTS: "-Dmaven.repo.local=$HOME/.m2/repository -Xmx1024m -XX:MaxPermSize=512m"
+
+jobs:
+  test:
+    name: Test on Java ${{ matrix.java-version }}
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        java-version: [21]
+      fail-fast: false
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK ${{ matrix.java-version }}
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ matrix.java-version }}
+        distribution: 'temurin'
+        
+    - name: Cache Maven dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+        
+    - name: Verify Maven setup
+      run: mvn --version
+      
+    - name: Compile project
+      run: mvn clean compile -B
+      
+    - name: Run unit tests
+      run: mvn test -B
+      
+    - name: Generate test report
+      if: success() || failure()
+      uses: dorny/test-reporter@v1.9.1
+      with:
+        name: Test Results (Java ${{ matrix.java-version }})
+        path: target/surefire-reports/*.xml
+        reporter: java-junit
+        fail-on-error: false
+        
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-java-${{ matrix.java-version }}
+        path: |
+          target/surefire-reports/
+          target/classes/
+        retention-days: 7
+
+  build-plugin:
+    name: Build Minecraft Plugin
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        
+    - name: Cache Maven dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+          
+    - name: Build plugin JAR
+      run: mvn clean package -B -DskipTests
+      
+    - name: Verify JAR created
+      run: |
+        ls -la target/
+        echo "Plugin JAR details:"
+        ls -la target/*.jar || echo "No JAR files found"
+        
+    - name: Upload plugin artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: xraymonitor-plugin
+        path: target/XRayMonitor-*.jar
+        retention-days: 30
+        
+  validate-code:
+    name: Code Quality Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        
+    - name: Validate code compilation
+      run: mvn clean compile -B
+      
+    - name: Check for common issues
+      run: |
+        echo "Checking for common code issues..."
+        # Check for TODO/FIXME comments
+        echo "TODO/FIXME comments found:"
+        grep -r "TODO\|FIXME" src/ || echo "None found"
+        
+        # Check line endings (should all be LF after our conversion)
+        echo "Checking line endings..."
+        if find src/ -name "*.java" -exec file {} \; | grep -q "CRLF"; then
+          echo "❌ Found files with CRLF line endings"
+          exit 1
+        else
+          echo "✅ All Java files have LF line endings"
+        fi
+        
+        # Check for proper imports
+        echo "Checking for unused imports..."
+        grep -r "^import.*\*" src/ && echo "⚠️  Found wildcard imports" || echo "✅ No wildcard imports found"
