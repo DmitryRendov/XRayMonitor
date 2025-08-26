@@ -4,7 +4,7 @@
 
     <groupId>me.drendov.xRayMonitor</groupId>
     <artifactId>XRayMonitor</artifactId>
-    <version>0.4.5</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
     <name>XRayMonitor</name>
     <description>Let's fight X-Ray cheat with simple Math!</description>
@@ -27,8 +27,6 @@
             <groupId>de.diddiz</groupId>
             <artifactId>logblock</artifactId>
             <version>1.20.0.0-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/LogBlock.jar</systemPath>
         </dependency>
         <!-- bStats -->
         <dependency>
@@ -81,6 +79,10 @@
             <id>spigot-repo-new</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+        <repository>
+            <id>logblock-repo</id>
+            <url>https://www.iani.de/nexus/content/repositories/snapshots/</url>
+        </repository>
     </repositories>
 
 
@@ -115,7 +117,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.5.1</version>
                 <configuration>
                     <relocations>
                         <relocation>

@@ -6,7 +6,6 @@ import me.drendov.XRayMonitor.XRayMonitor;
 import de.diddiz.LogBlock.BlockChange;
 import de.diddiz.LogBlock.LogBlock;
 import de.diddiz.LogBlock.QueryParams;
-import de.diddiz.LogBlock.MaterialConverter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
