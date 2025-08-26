@@ -46,3 +46,7 @@ hs_err_pid*
 # IntelliJ
 /.idea
 xRayMonitor.iml
+
+# VS Code
+.vscode/
+test.html
