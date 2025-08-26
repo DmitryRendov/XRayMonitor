@@ -43,20 +43,6 @@ public class CheckersTest {
     }
 
     @Test
-    void testArchitecturalImprovements() {
-        // This test validates that the refactored code maintains the same public interface
-        // while providing better maintainability internally
-        
-        // The refactored code:
-        // 1. Eliminates ~300 lines of repetitive if-else statements
-        // 2. Uses data-driven configuration for ore types
-        // 3. Supports easy addition of new materials
-        // 4. Maintains the same public API
-        
-        assertTrue(true, "Architectural improvements validated by successful compilation and interface preservation");
-    }
-
-    @Test
     void testExtensibilityDesign() {
         // Test that the refactored design shows evidence of good extensibility
         // The presence of inner classes and configuration maps indicates improved design
