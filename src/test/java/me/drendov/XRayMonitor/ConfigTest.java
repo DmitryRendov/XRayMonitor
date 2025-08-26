@@ -8,6 +8,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.lang.reflect.Field;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -24,13 +26,14 @@ class ConfigTest {
     private Config config;
 
     @BeforeEach
-    void setUp() {
-        // Create Config instance with mocked plugin
+    void setUp() throws Exception {
+        // Create Config instance
         config = new Config(mockPlugin);
         
-        // Setup mock behavior
-        when(mockPlugin.getConfig()).thenReturn(mockFileConfig);
-        when(mockPlugin.getLogger()).thenReturn(java.util.logging.Logger.getGlobal());
+        // Use reflection to set the config field directly to avoid calling load()
+        Field configField = Config.class.getDeclaredField("config");
+        configField.setAccessible(true);
+        configField.set(config, mockFileConfig);
     }
 
     @Test
@@ -89,6 +92,7 @@ class ConfigTest {
     void testSetLogger() {
         // Given
         String loggerName = "LogBlock";
+        when(mockPlugin.getLogger()).thenReturn(java.util.logging.Logger.getGlobal());
 
         // When
         config.setLogger(loggerName);
@@ -96,7 +100,7 @@ class ConfigTest {
         // Then
         verify(mockFileConfig).set("logging_plugin", "logblock");
         verify(mockPlugin).saveConfig();
-        verify(mockPlugin, atLeastOnce()).getLogger();
+        verify(mockPlugin).getLogger();
     }
 
     @Test
