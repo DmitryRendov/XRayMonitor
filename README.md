@@ -5,7 +5,7 @@
 
 Let's fight X-Ray cheat with simple Math!
 
-This simple plugin monitors players' mining activity and detects possible X-Ray cheeting based on statistical analysis. When a player mines significantly more valuable ores (like diamonds, gold, emeralds) compared to common blocks (like stone, coal), the plugin flags them for potential cheating. The detection is based on configurable thresholds, allowing server admins to customize sensitivity according to their needs. Used [LogBlock](https://www.spigotmc.org/resources/logblock.67333/) data to analyze mining patterns over time.
+This simple plugin monitors players' mining activity and detects potential X-Ray cheating through statistical analysis. When a player mines significantly more valuable ores (like diamonds, gold, emeralds) compared to common blocks (like stone, coal), the plugin flags them for potential cheating. The detection is based on configurable thresholds, allowing server admins to customize sensitivity according to their needs, and uses [LogBlock](https://www.spigotmc.org/resources/logblock.67333/) data to analyze mining patterns over time.
 
 This plugin requires Java 21 or higher and is compatible with Minecraft server versions 1.20.x and above. Also, it supports both Paper and Spigot server implementations.
 
@@ -17,7 +17,7 @@ XRayMonitor available on GitHub: https://github.com/DmitryRendov/XRayMonitor/rel
 1. Download the plugin.
 2. Place the plugin in your server's plugins directory.
 3. Restart your server.
-4. Use the /xrm check <player> command to check a particular player for xray cheeting.
+4. Use the /xrm check <player> command to check a particular player for X-ray cheating.
 
 ## Configuration 
 The configuration file `config.yml` is created in the plugin's folder after the first run.
