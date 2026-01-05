@@ -1,7 +1,34 @@
 # XRayMonitor
-
 [![CI](https://github.com/DmitryRendov/XRayMonitor/actions/workflows/xraymonitor-ci.yml/badge.svg)](https://github.com/DmitryRendov/XRayMonitor/actions/workflows/xraymonitor-ci.yml)
-[![Java](https://img.shields.io/badge/Java-17%2B-orange.svg)](https://java.com)
+[![Java](https://img.shields.io/badge/Java-21%2B-orange.svg)](https://java.com)
 [![License](https://img.shields.io/github/license/DmitryRendov/XRayMonitor)](LICENSE)
 
 Let's fight X-Ray cheat with simple Math!
+
+This simple plugin monitors players' mining activity and detects possible X-Ray cheeting based on statistical analysis. When a player mines significantly more valuable ores (like diamonds, gold, emeralds) compared to common blocks (like stone, coal), the plugin flags them for potential cheating.
+
+## Download
+XRayMonitor available on GitHub: https://github.com/DmitryRendov/XRayMonitor/releases
+
+## Installation
+1. Download the plugin.
+2. Place the plugin in your server's plugins directory.
+3. Restart your server.
+4. Use the /xrm check <player> command to check a particular player for xray cheeting.
+
+## Configuration 
+The configuration file `config.yml` is created in the plugin's folder after the first run.
+
+## Commands
+- `/xrm all` - Check the mining activity of all players on the server.
+- `/xrm <player>` - Check the mining activity of a specific player.
+- `/xrm reload` - Reload the plugin configuration.
+- `/xrm Player world:survival` - Check a specific player's mining activity in a specific world.
+- `/xrm all ore:diamond_ore rate:3` - Check all players' mining activity for diamond ore with a rate of 3.
+
+## Support
+If you encounter a bug, please open an issue with detailed information. I maintain this in my spare time, so fixes may take a while, but I'll address them when possible.
+
+## Donate
+If you appreciate my work, feel free to:
+- Buy Me a Coffee at [ko-fi.com](https://ko-fi.com/dmitryrendov)
