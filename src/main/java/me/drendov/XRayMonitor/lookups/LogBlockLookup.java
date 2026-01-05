@@ -9,11 +9,14 @@ import de.diddiz.LogBlock.QueryParams;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 
 public class LogBlockLookup {
     private XRayMonitor plugin = XRayMonitor.getInstance();
+    private Logger logger = plugin.getLogger();
 
     public int oreLookup(String player, String oreName, String world, int hours) throws SQLException {
         try {
@@ -49,8 +52,8 @@ public class LogBlockLookup {
             int count = logBlock.getCount(params);
 
             // Debug logging
-            if (count > 0 || "stone".equals(oreName) || "deepslate".equals(oreName)) {
-                this.plugin.getLogger().info("[DEBUG] LogBlock lookup - Player: " + player + ", Ore: " + oreName + " (" + mat + "), World: " + world + ", Hours: " + hours + ", Count: " + count);
+            if (this.plugin.config.isDebug()) {
+                logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " LogBlock lookup - Player: " + player + ", Ore: " + oreName + " (" + mat + "), World: " + world + ", Hours: " + hours + ", Count: " + count);
             }
 
             return count;

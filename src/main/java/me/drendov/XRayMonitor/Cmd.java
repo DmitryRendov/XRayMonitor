@@ -103,7 +103,9 @@ public class Cmd
                 }
                 if (hm.containsKey("rate")) {
                     rate = Float.parseFloat(hm.get("rate"));
-                    logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " rate=" + rate);
+                    if (plugin.config.isDebug()) {
+                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " rate=" + rate);
+                    }
                     if ( rate <= 0 ) {
                         XRayMonitor.sendMessage(player, TextMode.Err, Messages.ErrRatePositive);
                         return true;
@@ -111,11 +113,15 @@ public class Cmd
                 }
                 if (hm.containsKey("since")) {
                     hours = Integer.parseInt(hm.get("since"));
-                    logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " hours=" + hours);
+                    if (plugin.config.isDebug()) {
+                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " hours=" + hours);
+                    }
                 }
                 if (hm.containsKey("world")) {
                     world = hm.get("world");
-                    logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " world=" + world);
+                    if (plugin.config.isDebug()) {
+                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " world=" + world);
+                    }
                     if (!plugin.checkWorld(world)) {
                         XRayMonitor.sendMessage(player, TextMode.Err, Messages.WorldNotFound);
                         return true;
@@ -123,7 +129,9 @@ public class Cmd
                 }
                 if (hm.containsKey("ore")) {
                     oreName = hm.get("ore");
-                    logger.info("DEBUG: oreName=" + oreName);
+                    if (plugin.config.isDebug()) {
+                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " oreName=" + oreName);
+                    }
                 }
 
                 if (playerName.length() == 0) {
@@ -134,7 +142,9 @@ public class Cmd
                     try {
                         if (ClearedPlayerFile.wasPlayerCleared(playerName)) {
                             hours = ClearedPlayerFile.getHoursFromClear(playerName);
-                            logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " hours for cleared playerName=" + hours);
+                            if (plugin.config.isDebug()) {
+                                logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " hours for cleared playerName=" + hours);
+                            }
                         }
                         world = Config.defaultWorld;
                         if (world != null && !plugin.checkWorld(world)) {
@@ -142,7 +152,9 @@ public class Cmd
                             return true;
                         }
 
-                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run global check for " + playerName + " world=" + world + " hours=" + hours);
+                        if (plugin.config.isDebug()) {
+                            logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run global check for " + playerName + " world=" + world + " hours=" + hours);
+                        }
                         this.checker.checkGlobal(playerName, sender, world, hours);
                         return true;
                     } catch (Exception e) {
@@ -158,7 +170,9 @@ public class Cmd
                         if (ClearedPlayerFile.wasPlayerCleared(playerName)) {
                             hours = ClearedPlayerFile.getHoursFromClear(playerName);
                         }
-                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run global check for " + playerName + " sender=" + sender + " world=" + world + " hours=" + hours);
+                        if (plugin.config.isDebug()) {
+                            logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run global check for " + playerName + " sender=" + sender + " world=" + world + " hours=" + hours);
+                        }
                         this.checker.checkGlobal(playerName, sender, world, hours);
                         return true;
                     } catch (Exception e) {
@@ -167,12 +181,16 @@ public class Cmd
                 }
                 if (world.length() > 0 && !oreName.isEmpty()) {
                     if (playerName.equalsIgnoreCase("all") && rate > 0.0f) {
-                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " List All XRay-ers check for world=" + world + " oreName=" + oreName + " rate=" + rate + " hours=" + hours);
+                        if (plugin.config.isDebug()) {
+                            logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " List All XRay-ers check for world=" + world + " oreName=" + oreName + " rate=" + rate + " hours=" + hours);
+                        }
                         new Thread(new CustomRunnable(sender, world, oreName, rate, hours) {
 
                             @Override
                             public void run() {
-                                logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " List All XRay-ers check for world=" + this.world + " this.oreName=" + this.oreName + " this.rate=" + this.rate + " this.hours=" + this.hours);
+                                if (plugin.config.isDebug()) {
+                                    logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " List All XRay-ers check for world=" + this.world + " this.oreName=" + this.oreName + " this.rate=" + this.rate + " this.hours=" + this.hours);
+                                }
                                 Cmd.this.checker.listAllXRayers(this.sender, this.world, this.oreName, this.rate, this.hours);
                             }
                         }).start();
@@ -181,7 +199,9 @@ public class Cmd
                     if (ClearedPlayerFile.wasPlayerCleared(playerName)) {
                         hours = ClearedPlayerFile.getHoursFromClear(playerName);
                     }
-                    logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run checkSingle for " + playerName + " oreName=" + oreName + " world=" + world + " hours=" + hours);
+                    if (plugin.config.isDebug()) {
+                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run checkSingle for " + playerName + " oreName=" + oreName + " world=" + world + " hours=" + hours);
+                    }
                     this.checker.checkSingle(playerName, sender, oreName, world, hours);
                     return true;
                 }

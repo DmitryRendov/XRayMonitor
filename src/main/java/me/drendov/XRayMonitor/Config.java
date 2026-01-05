@@ -15,6 +15,7 @@ public class Config {
         this.plugin.reloadConfig();
         this.config = this.plugin.getConfig();
         this.config.addDefault("logging_plugin", "logblock");
+        this.config.addDefault("debug", false);
         this.config.addDefault("default_world", "world");
         this.config.addDefault("checkOnPlayerJoin", true);
         this.config.addDefault("checkOnPlayerJoin.warningMessage", "%player% has higher than average stats for %ores% and may be a cheater. Watch carefully.");
@@ -75,6 +76,10 @@ public class Config {
 
     public double getRate(String type, String ore) {
         return this.config.getDouble(ore + "_" + type);
+    }
+
+    public boolean isDebug() {
+        return this.config.getBoolean("debug");
     }
 
     String getCmd(String name) {
