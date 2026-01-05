@@ -4,7 +4,7 @@
 
     <groupId>me.drendov.xRayMonitor</groupId>
     <artifactId>XRayMonitor</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <packaging>jar</packaging>
     <name>XRayMonitor</name>
     <description>Let's fight X-Ray cheat with simple Math!</description>
@@ -17,17 +17,18 @@
     </properties>
 
     <dependencies>
-        <!-- Paper API (recommended over Spigot API) -->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.21.9-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <!-- LogBlock - provided by server, do NOT shade -->
         <dependency>
             <groupId>de.diddiz</groupId>
             <artifactId>logblock</artifactId>
             <version>1.20.0.0-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <!-- bStats -->
         <dependency>
@@ -59,7 +60,7 @@
     </dependencies>
 
     <repositories>
-        <!-- Paper API -->
+        <!-- Paper API (recommended over Spigot API) -->
         <repository>
             <id>papermc</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
@@ -80,6 +81,14 @@
         <repository>
             <id>logblock-repo</id>
             <url>https://www.iani.de/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>bukkit-repo</id>
+            <url>http://repo.md-5.net/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>spigot-repo-new</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
     </repositories>
 
