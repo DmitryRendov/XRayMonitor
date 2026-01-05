@@ -46,6 +46,11 @@ public class Listeners
                         int count_diorite = 0;
                         int count_granite = 0;
                         int count_deepslate = 0;
+                        int count_deepslate_bricks = 0;
+                        int count_deepslate_tiles = 0;
+                        int count_polished_deepslate = 0;
+                        int count_chiseled_deepslate = 0;
+                        int count_calcite = 0;
                         int count_blackstone = 0;
 
                         int diamond_count = 0;
@@ -67,8 +72,13 @@ public class Listeners
                             count_diorite = Listeners.this.lb.oreLookup(playerName, "diorite", world, hours);
                             count_granite = Listeners.this.lb.oreLookup(playerName, "granite", world, hours);
                             count_deepslate = Listeners.this.lb.oreLookup(playerName, "deepslate", world, hours);
+                            count_deepslate_bricks = Listeners.this.lb.oreLookup(playerName, "deepslate_bricks", world, hours);
+                            count_deepslate_tiles = Listeners.this.lb.oreLookup(playerName, "deepslate_tiles", world, hours);
+                            count_polished_deepslate = Listeners.this.lb.oreLookup(playerName, "polished_deepslate", world, hours);
+                            count_chiseled_deepslate = Listeners.this.lb.oreLookup(playerName, "chiseled_deepslate", world, hours);
+                            count_calcite = Listeners.this.lb.oreLookup(playerName, "calcite", world, hours);
                             count_blackstone = Listeners.this.lb.oreLookup(playerName, "blackstone", world, hours);
-                            count_stones = count_stone + count_andesite + count_diorite + count_granite + count_deepslate + count_blackstone;
+                            count_stones = count_stone + count_andesite + count_diorite + count_granite + count_deepslate + count_deepslate_bricks + count_deepslate_tiles + count_polished_deepslate + count_chiseled_deepslate + count_calcite + count_blackstone;
 
                             diamond_count = Listeners.this.lb.oreLookup(playerName, "diamond_ore", world, hours);
                             diamond_count += Listeners.this.lb.oreLookup(playerName, "deepslate_diamond_ore", world, hours);
