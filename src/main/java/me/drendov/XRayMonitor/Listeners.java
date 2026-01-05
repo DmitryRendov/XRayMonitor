@@ -67,40 +67,46 @@ public class Listeners
                         int count_netherrack = 0;
                         int count_basalt = 0;
                         if (Listeners.this.plugin.getConfig().getString("logging_plugin").equalsIgnoreCase("logblock")) {
-                            count_stone = Listeners.this.lb.oreLookup(playerName, "stone", world, hours);
-                            count_andesite = Listeners.this.lb.oreLookup(playerName, "andesite", world, hours);
-                            count_diorite = Listeners.this.lb.oreLookup(playerName, "diorite", world, hours);
-                            count_granite = Listeners.this.lb.oreLookup(playerName, "granite", world, hours);
-                            count_deepslate = Listeners.this.lb.oreLookup(playerName, "deepslate", world, hours);
-                            count_deepslate_bricks = Listeners.this.lb.oreLookup(playerName, "deepslate_bricks", world, hours);
-                            count_deepslate_tiles = Listeners.this.lb.oreLookup(playerName, "deepslate_tiles", world, hours);
-                            count_polished_deepslate = Listeners.this.lb.oreLookup(playerName, "polished_deepslate", world, hours);
-                            count_chiseled_deepslate = Listeners.this.lb.oreLookup(playerName, "chiseled_deepslate", world, hours);
-                            count_calcite = Listeners.this.lb.oreLookup(playerName, "calcite", world, hours);
-                            count_blackstone = Listeners.this.lb.oreLookup(playerName, "blackstone", world, hours);
-                            count_stones = count_stone + count_andesite + count_diorite + count_granite + count_deepslate + count_deepslate_bricks + count_deepslate_tiles + count_polished_deepslate + count_chiseled_deepslate + count_calcite + count_blackstone;
+                            try {
+                                count_stone = Listeners.this.lb.oreLookup(playerName, "stone", world, hours);
+                                count_andesite = Listeners.this.lb.oreLookup(playerName, "andesite", world, hours);
+                                count_diorite = Listeners.this.lb.oreLookup(playerName, "diorite", world, hours);
+                                count_granite = Listeners.this.lb.oreLookup(playerName, "granite", world, hours);
+                                count_deepslate = Listeners.this.lb.oreLookup(playerName, "deepslate", world, hours);
+                                count_deepslate_bricks = Listeners.this.lb.oreLookup(playerName, "deepslate_bricks", world, hours);
+                                count_deepslate_tiles = Listeners.this.lb.oreLookup(playerName, "deepslate_tiles", world, hours);
+                                count_polished_deepslate = Listeners.this.lb.oreLookup(playerName, "polished_deepslate", world, hours);
+                                count_chiseled_deepslate = Listeners.this.lb.oreLookup(playerName, "chiseled_deepslate", world, hours);
+                                count_calcite = Listeners.this.lb.oreLookup(playerName, "calcite", world, hours);
+                                count_blackstone = Listeners.this.lb.oreLookup(playerName, "blackstone", world, hours);
+                                count_stones = count_stone + count_andesite + count_diorite + count_granite + count_deepslate + count_deepslate_bricks + count_deepslate_tiles + count_polished_deepslate + count_chiseled_deepslate + count_calcite + count_blackstone;
 
-                            diamond_count = Listeners.this.lb.oreLookup(playerName, "diamond_ore", world, hours);
-                            diamond_count += Listeners.this.lb.oreLookup(playerName, "deepslate_diamond_ore", world, hours);
-                            gold_count = Listeners.this.lb.oreLookup(playerName, "gold_ore", world, hours);
-                            gold_count += Listeners.this.lb.oreLookup(playerName, "deepslate_gold_ore", world, hours);
-                            gold_count += Listeners.this.lb.oreLookup(playerName, "nether_gold_ore", world, hours);
-                            lapis_count = Listeners.this.lb.oreLookup(playerName, "lapis_ore", world, hours);
-                            lapis_count += Listeners.this.lb.oreLookup(playerName, "deepslate_lapis_ore", world, hours);
-                            copper_count = Listeners.this.lb.oreLookup(playerName, "copper_ore", world, hours);
-                            copper_count += Listeners.this.lb.oreLookup(playerName, "deepslate_copper_ore", world, hours);
-                            iron_count = Listeners.this.lb.oreLookup(playerName, "iron_ore", world, hours);
-                            iron_count += Listeners.this.lb.oreLookup(playerName, "deepslate_iron_ore", world, hours);                            redstone_count = Listeners.this.lb.oreLookup(playerName, "redstone_ore", world, hours);
-                            coal_count = Listeners.this.lb.oreLookup(playerName, "coal_ore", world, hours);
-                            coal_count += Listeners.this.lb.oreLookup(playerName, "deepslate_coal_ore", world, hours);
-                            mossy_count = Listeners.this.lb.oreLookup(playerName, "mossy_cobblestone", world, hours);
-                            emerald_count = Listeners.this.lb.oreLookup(playerName, "emerald_ore", world, hours);
-                            emerald_count += Listeners.this.lb.oreLookup(playerName, "deepslate_emerald_ore", world, hours);
-                            ancient_debris_count = Listeners.this.lb.oreLookup(playerName, "ancient_debris", world, hours);
-                            spawner_count = Listeners.this.lb.oreLookup(playerName, "spawner", world, hours);
-                            count_netherrack = Listeners.this.lb.oreLookup(playerName, "netherrack", world, hours);
-                            count_basalt = Listeners.this.lb.oreLookup(playerName, "basalt", world, hours);
-
+                                diamond_count = Listeners.this.lb.oreLookup(playerName, "diamond_ore", world, hours);
+                                diamond_count += Listeners.this.lb.oreLookup(playerName, "deepslate_diamond_ore", world, hours);
+                                gold_count = Listeners.this.lb.oreLookup(playerName, "gold_ore", world, hours);
+                                gold_count += Listeners.this.lb.oreLookup(playerName, "deepslate_gold_ore", world, hours);
+                                gold_count += Listeners.this.lb.oreLookup(playerName, "nether_gold_ore", world, hours);
+                                lapis_count = Listeners.this.lb.oreLookup(playerName, "lapis_ore", world, hours);
+                                lapis_count += Listeners.this.lb.oreLookup(playerName, "deepslate_lapis_ore", world, hours);
+                                copper_count = Listeners.this.lb.oreLookup(playerName, "copper_ore", world, hours);
+                                copper_count += Listeners.this.lb.oreLookup(playerName, "deepslate_copper_ore", world, hours);
+                                iron_count = Listeners.this.lb.oreLookup(playerName, "iron_ore", world, hours);
+                                iron_count += Listeners.this.lb.oreLookup(playerName, "deepslate_iron_ore", world, hours);
+                                redstone_count = Listeners.this.lb.oreLookup(playerName, "redstone_ore", world, hours);
+                                redstone_count += Listeners.this.lb.oreLookup(playerName, "deepslate_redstone_ore", world, hours);
+                                coal_count = Listeners.this.lb.oreLookup(playerName, "coal_ore", world, hours);
+                                coal_count += Listeners.this.lb.oreLookup(playerName, "deepslate_coal_ore", world, hours);
+                                mossy_count = Listeners.this.lb.oreLookup(playerName, "mossy_cobblestone", world, hours);
+                                emerald_count = Listeners.this.lb.oreLookup(playerName, "emerald_ore", world, hours);
+                                emerald_count += Listeners.this.lb.oreLookup(playerName, "deepslate_emerald_ore", world, hours);
+                                ancient_debris_count = Listeners.this.lb.oreLookup(playerName, "ancient_debris", world, hours);
+                                spawner_count = Listeners.this.lb.oreLookup(playerName, "spawner", world, hours);
+                                count_netherrack = Listeners.this.lb.oreLookup(playerName, "netherrack", world, hours);
+                                count_basalt = Listeners.this.lb.oreLookup(playerName, "basalt", world, hours);
+                            } catch (Exception ex) {
+                                Listeners.this.plugin.getLogger().severe("Error during ore lookup for player " + playerName + ": " + ex.getMessage());
+                                ex.printStackTrace();
+                            }
                         }
                         String dia = "";
                         String gld = "";

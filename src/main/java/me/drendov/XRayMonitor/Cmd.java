@@ -28,72 +28,8 @@ public class Cmd
         // xrm
         if (cmd.getName().equalsIgnoreCase("xrm")) {
             if (sender.hasPermission("xrm.check") || sender.isOp()) {
-                String playerName = "";
-                if (args.length > 0) {
-                    if (!args[0].contains(":")) {
-                        playerName = args[0];
-                    }
-                } else {
-                    plugin.showInfo(sender);
-                    return true;
-                }
-                String world = "";
-                int hours = -1;
-                String oreName = "";
-                float rate = 0.0f;
-                HashMap<String, String> hm = new HashMap<String, String>();
-                String[] nonPlayerArgs = new String[args.length];
-                try {
-                    int i;
-                    if (!args[0].contains(":")) {
-                        if (args[0].equals("clear")) {
-                            for (i = 2; i < args.length; ++i) {
-                                nonPlayerArgs[i - 2] = args[i];
-                            }
-                        } else {
-                            for (i = 1; i < args.length; ++i) {
-                                nonPlayerArgs[i - 1] = args[i];
-                            }
-                        }
-                    } else {
-                        for (i = 0; i < args.length; ++i) {
-                            nonPlayerArgs[i] = args[i];
-                        }
-                    }
-                    for (String arg : nonPlayerArgs) {
-                        if (arg == null) break;
-                        String[] tokens = arg.split(":");
-                        if (tokens.length == 2) {
-                            hm.put(tokens[0], tokens[1]);
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (hm.containsKey("rate")) {
-                    rate = Float.parseFloat(hm.get("rate"));
-                    logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " rate=" + rate);
-                    if ( rate <= 0 ) {
-                        XRayMonitor.sendMessage(player, TextMode.Err, Messages.ErrRatePositive);
-                        return true;
-                    }
-                }
-                if (hm.containsKey("since")) {
-                    hours = Integer.parseInt(hm.get("since"));
-                    logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " hours=" + hours);
-                }
-                if (hm.containsKey("world")) {
-                    world = hm.get("world");
-                    logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " world=" + world);
-                    if (!plugin.checkWorld(world)) {
-                        XRayMonitor.sendMessage(player, TextMode.Err, Messages.WorldNotFound);
-                        return true;
-                    }
-                }
-                if (hm.containsKey("ore")) {
-                    oreName = hm.get("ore");
-                    logger.info("DEBUG: oreName=" + oreName);
-                }
+                
+                // Handle subcommands
                 if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
                     plugin.config.load();
                     XRayMonitor.sendMessage(player, TextMode.Success, Messages.Reloaded);
@@ -115,6 +51,89 @@ public class Cmd
                     XRayMonitor.sendMessage(player, TextMode.Err, Messages.NoPermissionForCommand);
                     return true;
                 }
+
+                // Handle "check" subcommand - shift args if it's present
+                String[] shiftedArgs = args;
+                if (args.length > 0 && args[0].equalsIgnoreCase("check")) {
+                    if (args.length < 2) {
+                        plugin.showInfo(sender);
+                        return true;
+                    }
+                    // Remove "check" from args, shift everything down
+                    shiftedArgs = new String[args.length - 1];
+                    System.arraycopy(args, 1, shiftedArgs, 0, args.length - 1);
+                }
+
+                String playerName = "";
+                if (shiftedArgs.length > 0) {
+                    if (!shiftedArgs[0].contains(":")) {
+                        playerName = shiftedArgs[0];
+                    }
+                } else {
+                    plugin.showInfo(sender);
+                    return true;
+                }
+
+                String world = "";
+                int hours = -1;
+                String oreName = "";
+                float rate = 0.0f;
+                HashMap<String, String> hm = new HashMap<String, String>();
+                String[] nonPlayerArgs = new String[shiftedArgs.length];
+                try {
+                    int i;
+                    if (!shiftedArgs[0].contains(":")) {
+                        for (i = 1; i < shiftedArgs.length; ++i) {
+                            nonPlayerArgs[i - 1] = shiftedArgs[i];
+                        }
+                    } else {
+                        for (i = 0; i < shiftedArgs.length; ++i) {
+                            nonPlayerArgs[i] = shiftedArgs[i];
+                        }
+                    }
+                    for (String arg : nonPlayerArgs) {
+                        if (arg == null) break;
+                        String[] tokens = arg.split(":");
+                        if (tokens.length == 2) {
+                            hm.put(tokens[0], tokens[1]);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (hm.containsKey("rate")) {
+                    rate = Float.parseFloat(hm.get("rate"));
+                    if (plugin.config.isDebug()) {
+                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " rate=" + rate);
+                    }
+                    if ( rate <= 0 ) {
+                        XRayMonitor.sendMessage(player, TextMode.Err, Messages.ErrRatePositive);
+                        return true;
+                    }
+                }
+                if (hm.containsKey("since")) {
+                    hours = Integer.parseInt(hm.get("since"));
+                    if (plugin.config.isDebug()) {
+                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " hours=" + hours);
+                    }
+                }
+                if (hm.containsKey("world")) {
+                    world = hm.get("world");
+                    if (plugin.config.isDebug()) {
+                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " world=" + world);
+                    }
+                    if (!plugin.checkWorld(world)) {
+                        XRayMonitor.sendMessage(player, TextMode.Err, Messages.WorldNotFound);
+                        return true;
+                    }
+                }
+                if (hm.containsKey("ore")) {
+                    oreName = hm.get("ore");
+                    if (plugin.config.isDebug()) {
+                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " oreName=" + oreName);
+                    }
+                }
+
                 if (playerName.length() == 0) {
                     this.plugin.showInfo(sender);
                     return true;
@@ -123,7 +142,9 @@ public class Cmd
                     try {
                         if (ClearedPlayerFile.wasPlayerCleared(playerName)) {
                             hours = ClearedPlayerFile.getHoursFromClear(playerName);
-                            logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " hours for cleared playerName=" + hours);
+                            if (plugin.config.isDebug()) {
+                                logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " hours for cleared playerName=" + hours);
+                            }
                         }
                         world = Config.defaultWorld;
                         if (world != null && !plugin.checkWorld(world)) {
@@ -131,7 +152,9 @@ public class Cmd
                             return true;
                         }
 
-                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run global check for " + playerName + " world=" + world + " hours=" + hours);
+                        if (plugin.config.isDebug()) {
+                            logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run global check for " + playerName + " world=" + world + " hours=" + hours);
+                        }
                         this.checker.checkGlobal(playerName, sender, world, hours);
                         return true;
                     } catch (Exception e) {
@@ -147,7 +170,9 @@ public class Cmd
                         if (ClearedPlayerFile.wasPlayerCleared(playerName)) {
                             hours = ClearedPlayerFile.getHoursFromClear(playerName);
                         }
-                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run global check for " + playerName + " sender=" + sender + " world=" + world + " hours=" + hours);
+                        if (plugin.config.isDebug()) {
+                            logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run global check for " + playerName + " sender=" + sender + " world=" + world + " hours=" + hours);
+                        }
                         this.checker.checkGlobal(playerName, sender, world, hours);
                         return true;
                     } catch (Exception e) {
@@ -156,12 +181,16 @@ public class Cmd
                 }
                 if (world.length() > 0 && !oreName.isEmpty()) {
                     if (playerName.equalsIgnoreCase("all") && rate > 0.0f) {
-                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " List All XRay-ers check for world=" + world + " oreName=" + oreName + " rate=" + rate + " hours=" + hours);
+                        if (plugin.config.isDebug()) {
+                            logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " List All XRay-ers check for world=" + world + " oreName=" + oreName + " rate=" + rate + " hours=" + hours);
+                        }
                         new Thread(new CustomRunnable(sender, world, oreName, rate, hours) {
 
                             @Override
                             public void run() {
-                                logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " List All XRay-ers check for world=" + this.world + " this.oreName=" + this.oreName + " this.rate=" + this.rate + " this.hours=" + this.hours);
+                                if (plugin.config.isDebug()) {
+                                    logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " List All XRay-ers check for world=" + this.world + " this.oreName=" + this.oreName + " this.rate=" + this.rate + " this.hours=" + this.hours);
+                                }
                                 Cmd.this.checker.listAllXRayers(this.sender, this.world, this.oreName, this.rate, this.hours);
                             }
                         }).start();
@@ -170,7 +199,9 @@ public class Cmd
                     if (ClearedPlayerFile.wasPlayerCleared(playerName)) {
                         hours = ClearedPlayerFile.getHoursFromClear(playerName);
                     }
-                    logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run checkSingle for " + playerName + " oreName=" + oreName + " world=" + world + " hours=" + hours);
+                    if (plugin.config.isDebug()) {
+                        logger.info(ChatColor.RED + "[DEBUG]" + ChatColor.WHITE + " Run checkSingle for " + playerName + " oreName=" + oreName + " world=" + world + " hours=" + hours);
+                    }
                     this.checker.checkSingle(playerName, sender, oreName, world, hours);
                     return true;
                 }

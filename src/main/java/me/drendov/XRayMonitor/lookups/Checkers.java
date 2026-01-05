@@ -259,8 +259,20 @@ public class Checkers {
      * Format percentage to 2 decimal places
      */
     private String formatPercentage(float percentage) {
+        // Handle special cases
+        if (Float.isInfinite(percentage) || Float.isNaN(percentage) || percentage < 0) {
+            return "0.00";
+        }
+        if (percentage > 100) {
+            return "100.00";
+        }
+
         String s = percentage + "000000000";
-        return String.valueOf(Float.parseFloat(s.substring(0, s.lastIndexOf('.') + 3)));
+        int dotIndex = s.lastIndexOf('.');
+        if (dotIndex == -1) {
+            return String.valueOf((int) percentage);
+        }
+        return String.valueOf(Float.parseFloat(s.substring(0, dotIndex + 3)));
     }
 
     /**

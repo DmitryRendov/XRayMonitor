@@ -49,3 +49,4 @@ logOreBreaks:
   mossy: false
   spawners: false
 logging_plugin: logblock
+debug: false
