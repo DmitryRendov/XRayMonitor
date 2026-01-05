@@ -246,7 +246,7 @@ public class Listeners
         if ( ((block == Material.COPPER_ORE) || (block == Material.DEEPSLATE_COPPER_ORE)) && (this.plugin.getConfig().getBoolean("logOreBreaks.copper"))) {
             for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
                 if (staff.hasPermission("xcheck.receive")) {
-                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined an iron ore.");
+                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined a copper ore.");
                 }
             }
         }
@@ -285,10 +285,10 @@ public class Listeners
                 }
             }
         }
-        if ((block == Material.ANCIENT_DEBRIS) && (this.plugin.getConfig().getBoolean("logOreBreaks.ancient_debris"))) {
+        if ((block == Material.ANCIENT_DEBRIS) && (this.plugin.getConfig().getBoolean("logOreBreaks.ancient"))) {
             for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
                 if (staff.hasPermission("xcheck.receive")) {
-                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined a ancient_debris ore.");
+                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined an ancient debris.");
                 }
             }
         }
@@ -306,10 +306,10 @@ public class Listeners
                 }
             }
         }
-        if ((block == Material.SPAWNER) && (this.plugin.getConfig().getBoolean("logOreBreaks.spawners"))) {
+        if ((block == Material.SPAWNER) && (this.plugin.getConfig().getBoolean("logOreBreaks.spawner"))) {
             for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
                 if (staff.hasPermission("xcheck.receive")) {
-                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined a monster spawner.");
+                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined a spawner.");
                 }
             }
         }
