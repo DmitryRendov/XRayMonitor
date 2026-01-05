@@ -221,10 +221,31 @@ public class Listeners
         }
     }
 
+    private void notifyStaffOfOreBreak(String player, String message) {
+        for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
+            if (staff.hasPermission("xcheck.receive")) {
+                staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + message);
+            }
+        }
+    }
+
+    private void checkAndNotifyOre(Material block, String configKey, String message,
+                                   Material... materials) {
+        if (this.plugin.getConfig().getBoolean(configKey)) {
+            for (Material material : materials) {
+                if (block == material) {
+                    notifyStaffOfOreBreak(null, message);
+                    return;
+                }
+            }
+        }
+    }
+
     @EventHandler
     public void onOreBreak(BlockBreakEvent event) {
         String player = event.getPlayer().getName();
         Material block = event.getBlock().getType();
+
         if ((block != Material.DIAMOND_ORE) && (block != Material.DEEPSLATE_DIAMOND_ORE) &&
                 (block != Material.IRON_ORE) && (block != Material.DEEPSLATE_IRON_ORE) &&
                 (block != Material.COPPER_ORE) && (block != Material.DEEPSLATE_COPPER_ORE) &&
@@ -236,82 +257,51 @@ public class Listeners
                 (block != Material.ANCIENT_DEBRIS) && (block != Material.SPAWNER) && (block != Material.MOSSY_COBBLESTONE)) {
             return;
         }
-        if ( ((block == Material.IRON_ORE) || (block == Material.DEEPSLATE_IRON_ORE)) && (this.plugin.getConfig().getBoolean("logOreBreaks.iron"))) {
-            for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
-                if (staff.hasPermission("xcheck.receive")) {
-                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined an iron ore.");
-                }
-            }
+
+        // Check each ore type and notify staff
+        if ((block == Material.IRON_ORE || block == Material.DEEPSLATE_IRON_ORE) && 
+            this.plugin.getConfig().getBoolean("logOreBreaks.iron")) {
+            notifyStaffOfOreBreak(player, player + " has just mined an iron ore.");
         }
-        if ( ((block == Material.COPPER_ORE) || (block == Material.DEEPSLATE_COPPER_ORE)) && (this.plugin.getConfig().getBoolean("logOreBreaks.copper"))) {
-            for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
-                if (staff.hasPermission("xcheck.receive")) {
-                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined a copper ore.");
-                }
-            }
+        if ((block == Material.COPPER_ORE || block == Material.DEEPSLATE_COPPER_ORE) && 
+            this.plugin.getConfig().getBoolean("logOreBreaks.copper")) {
+            notifyStaffOfOreBreak(player, player + " has just mined a copper ore.");
         }
-        if ( ((block == Material.COAL_ORE) || (block == Material.DEEPSLATE_COAL_ORE)) && (this.plugin.getConfig().getBoolean("logOreBreaks.coal"))) {
-            for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
-                if (staff.hasPermission("xcheck.receive")) {
-                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined a coal ore.");
-                }
-            }
+        if ((block == Material.COAL_ORE || block == Material.DEEPSLATE_COAL_ORE) && 
+            this.plugin.getConfig().getBoolean("logOreBreaks.coal")) {
+            notifyStaffOfOreBreak(player, player + " has just mined a coal ore.");
         }
-        if ( ((block == Material.REDSTONE_ORE) || (block == Material.DEEPSLATE_REDSTONE_ORE)) && (this.plugin.getConfig().getBoolean("logOreBreaks.redstone"))) {
-            for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
-                if (staff.hasPermission("xcheck.receive")) {
-                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined a redstone ore.");
-                }
-            }
+        if ((block == Material.REDSTONE_ORE || block == Material.DEEPSLATE_REDSTONE_ORE) && 
+            this.plugin.getConfig().getBoolean("logOreBreaks.redstone")) {
+            notifyStaffOfOreBreak(player, player + " has just mined a redstone ore.");
         }
-        if ( ((block == Material.GOLD_ORE) || (block == Material.DEEPSLATE_GOLD_ORE) || (block == Material.NETHER_GOLD_ORE)) && (this.plugin.getConfig().getBoolean("logOreBreaks.gold"))) {
-            for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
-                if (staff.hasPermission("xcheck.receive")) {
-                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined a gold ore.");
-                }
-            }
+        if ((block == Material.GOLD_ORE || block == Material.DEEPSLATE_GOLD_ORE || block == Material.NETHER_GOLD_ORE) && 
+            this.plugin.getConfig().getBoolean("logOreBreaks.gold")) {
+            notifyStaffOfOreBreak(player, player + " has just mined a gold ore.");
         }
-        if ( ((block == Material.LAPIS_ORE) || (block == Material.DEEPSLATE_LAPIS_ORE)) && (this.plugin.getConfig().getBoolean("logOreBreaks.lapis"))) {
-            for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
-                if (staff.hasPermission("xcheck.receive")) {
-                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined a lapis ore.");
-                }
-            }
+        if ((block == Material.LAPIS_ORE || block == Material.DEEPSLATE_LAPIS_ORE) && 
+            this.plugin.getConfig().getBoolean("logOreBreaks.lapis")) {
+            notifyStaffOfOreBreak(player, player + " has just mined a lapis ore.");
         }
-        if ( ((block == Material.EMERALD_ORE) || (block == Material.DEEPSLATE_EMERALD_ORE)) && (this.plugin.getConfig().getBoolean("logOreBreaks.emerald"))) {
-            for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
-                if (staff.hasPermission("xcheck.receive")) {
-                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined a emerald ore.");
-                }
-            }
+        if ((block == Material.EMERALD_ORE || block == Material.DEEPSLATE_EMERALD_ORE) && 
+            this.plugin.getConfig().getBoolean("logOreBreaks.emerald")) {
+            notifyStaffOfOreBreak(player, player + " has just mined a emerald ore.");
         }
-        if ((block == Material.ANCIENT_DEBRIS) && (this.plugin.getConfig().getBoolean("logOreBreaks.ancient"))) {
-            for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
-                if (staff.hasPermission("xcheck.receive")) {
-                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined an ancient debris.");
-                }
-            }
+        if (block == Material.ANCIENT_DEBRIS && 
+            this.plugin.getConfig().getBoolean("logOreBreaks.ancient")) {
+            notifyStaffOfOreBreak(player, player + " has just mined an ancient debris.");
         }
-        if ( ((block == Material.DIAMOND_ORE) || (block == Material.DEEPSLATE_DIAMOND_ORE)) && (this.plugin.getConfig().getBoolean("logOreBreaks.diamond"))) {
-            for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
-                if (staff.hasPermission("xcheck.receive")) {
-                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined a diamond ore.");
-                }
-            }
+        if ((block == Material.DIAMOND_ORE || block == Material.DEEPSLATE_DIAMOND_ORE) && 
+            this.plugin.getConfig().getBoolean("logOreBreaks.diamond")) {
+            notifyStaffOfOreBreak(player, player + " has just mined a diamond ore.");
         }
-        if ((block == Material.MOSSY_COBBLESTONE) && (this.plugin.getConfig().getBoolean("logOreBreaks.mossy"))) {
-            for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
-                if (staff.hasPermission("xcheck.receive")) {
-                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined a mossy cobblestone block.");
-                }
-            }
+        if (block == Material.MOSSY_COBBLESTONE && 
+            this.plugin.getConfig().getBoolean("logOreBreaks.mossy")) {
+            notifyStaffOfOreBreak(player, player + " has just mined a mossy cobblestone block.");
         }
-        if ((block == Material.SPAWNER) && (this.plugin.getConfig().getBoolean("logOreBreaks.spawner"))) {
-            for (Player staff : this.plugin.getServer().getOnlinePlayers()) {
-                if (staff.hasPermission("xcheck.receive")) {
-                    staff.sendMessage(ChatColor.RED + "[XRayMonitor] " + ChatColor.AQUA + player + " has just mined a spawner.");
-                }
-            }
+        if (block == Material.SPAWNER && 
+            this.plugin.getConfig().getBoolean("logOreBreaks.spawner")) {
+            notifyStaffOfOreBreak(player, player + " has just mined a spawner.");
         }
     }
 }
