@@ -28,36 +28,67 @@ public class Cmd
         // xrm
         if (cmd.getName().equalsIgnoreCase("xrm")) {
             if (sender.hasPermission("xrm.check") || sender.isOp()) {
+                
+                // Handle subcommands
+                if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+                    plugin.config.load();
+                    XRayMonitor.sendMessage(player, TextMode.Success, Messages.Reloaded);
+                    return true;
+                }
+                if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
+                    plugin.showHelp(sender);
+                    return true;
+                }
+                if (args.length == 2 && args[0].equalsIgnoreCase("clear")) {
+                    if (sender.hasPermission("xrm.clear") || sender.isOp()) {
+                        try {
+                            plugin.clearPlayer(sender, args[1]);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return true;
+                    }
+                    XRayMonitor.sendMessage(player, TextMode.Err, Messages.NoPermissionForCommand);
+                    return true;
+                }
+
+                // Handle "check" subcommand - shift args if it's present
+                String[] shiftedArgs = args;
+                if (args.length > 0 && args[0].equalsIgnoreCase("check")) {
+                    if (args.length < 2) {
+                        plugin.showInfo(sender);
+                        return true;
+                    }
+                    // Remove "check" from args, shift everything down
+                    shiftedArgs = new String[args.length - 1];
+                    System.arraycopy(args, 1, shiftedArgs, 0, args.length - 1);
+                }
+
                 String playerName = "";
-                if (args.length > 0) {
-                    if (!args[0].contains(":")) {
-                        playerName = args[0];
+                if (shiftedArgs.length > 0) {
+                    if (!shiftedArgs[0].contains(":")) {
+                        playerName = shiftedArgs[0];
                     }
                 } else {
                     plugin.showInfo(sender);
                     return true;
                 }
+
                 String world = "";
                 int hours = -1;
                 String oreName = "";
                 float rate = 0.0f;
                 HashMap<String, String> hm = new HashMap<String, String>();
-                String[] nonPlayerArgs = new String[args.length];
+                String[] nonPlayerArgs = new String[shiftedArgs.length];
                 try {
                     int i;
-                    if (!args[0].contains(":")) {
-                        if (args[0].equals("clear")) {
-                            for (i = 2; i < args.length; ++i) {
-                                nonPlayerArgs[i - 2] = args[i];
-                            }
-                        } else {
-                            for (i = 1; i < args.length; ++i) {
-                                nonPlayerArgs[i - 1] = args[i];
-                            }
+                    if (!shiftedArgs[0].contains(":")) {
+                        for (i = 1; i < shiftedArgs.length; ++i) {
+                            nonPlayerArgs[i - 1] = shiftedArgs[i];
                         }
                     } else {
-                        for (i = 0; i < args.length; ++i) {
-                            nonPlayerArgs[i] = args[i];
+                        for (i = 0; i < shiftedArgs.length; ++i) {
+                            nonPlayerArgs[i] = shiftedArgs[i];
                         }
                     }
                     for (String arg : nonPlayerArgs) {
@@ -94,27 +125,7 @@ public class Cmd
                     oreName = hm.get("ore");
                     logger.info("DEBUG: oreName=" + oreName);
                 }
-                if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-                    plugin.config.load();
-                    XRayMonitor.sendMessage(player, TextMode.Success, Messages.Reloaded);
-                    return true;
-                }
-                if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
-                    plugin.showHelp(sender);
-                    return true;
-                }
-                if (args.length == 2 && args[0].equalsIgnoreCase("clear")) {
-                    if (sender.hasPermission("xrm.clear") || sender.isOp()) {
-                        try {
-                            plugin.clearPlayer(sender, args[1]);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        return true;
-                    }
-                    XRayMonitor.sendMessage(player, TextMode.Err, Messages.NoPermissionForCommand);
-                    return true;
-                }
+
                 if (playerName.length() == 0) {
                     this.plugin.showInfo(sender);
                     return true;

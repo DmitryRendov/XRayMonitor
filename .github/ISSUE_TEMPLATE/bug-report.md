@@ -25,9 +25,9 @@ about: Create a report to help us improve XRayMonitor
 
 ### Server Information
 * **Server version/platform:**  <!-- /ver -->
-* **XRayMonitor Version:**      <!-- /xcheck version -->
+* **XRayMonitor Version:**      <!-- /xrm version -->
 * **LogBlock Version:**         <!-- /lb -->
-* **Other plugins(if any):**    <!-- /plugins -->
+
 
 ### Additional Info
 <!--- Add any other information about the problem here --->
